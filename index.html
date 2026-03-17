@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biyokuru Lステップ シナリオ フローチャート</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f5f7fa;
+    color: #1a1a2e;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #fff;
+    padding: 40px 20px 32px;
+    text-align: center;
+  }
+  .page-header h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .page-header p { font-size: 13px; color: #a0aec0; }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 12px;
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .legend-dot.blue { background: #3b82f6; }
+  .legend-dot.green { background: #22c55e; }
+  .legend-dot.orange { background: #f59e0b; }
+  .legend-dot.gray { background: #94a3b8; }
+
+  /* ── Nav (sticky TOC) ── */
+  .nav-toc {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 10px 20px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 46px;
+    z-index: 99;
+  }
+  .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 16px;
+    text-decoration: none;
+    color: #475569;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    transition: all .15s;
+    cursor: pointer;
+  }
+  .nav-btn:hover { background: #e2e8f0; }
+  .nav-btn .nav-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+
+  /* ── Step cards ── */
+  .step { margin-bottom: 0; scroll-margin-top: 120px; }
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04);
+    overflow: hidden;
+    transition: box-shadow .2s;
+  }
+  .card:hover { box-shadow: 0 2px 6px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06); }
+  .card.highlight { box-shadow: 0 0 0 3px #3b82f6, 0 8px 24px rgba(59,130,246,.15); }
+
+  .card-border-blue   { border-left: 4px solid #3b82f6; }
+  .card-border-green  { border-left: 4px solid #22c55e; }
+  .card-border-orange { border-left: 4px solid #f59e0b; }
+  .card-border-gray   { border-left: 4px solid #94a3b8; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .card-day {
+    font-size: 12px; font-weight: 700; color: #fff;
+    background: #1a1a2e; padding: 3px 10px; border-radius: 6px; white-space: nowrap;
+  }
+  .card-title { font-size: 16px; font-weight: 600; flex: 1; }
+  .badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+  .badge-existing { background: #dbeafe; color: #1e40af; }
+  .badge-new      { background: #dcfce7; color: #166534; }
+  .badge-modified { background: #fef3c7; color: #92400e; }
+
+  .card-body { padding: 16px 20px 20px; }
+  .card-trigger { font-size: 11px; color: #94a3b8; margin-bottom: 10px; }
+
+  /* ── LINE message preview (compact) ── */
+  .msg-preview {
+    background: #e8edf3;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 10px 0;
+  }
+  .msg-bubble {
+    background: #fff;
+    border-radius: 0 12px 12px 12px;
+    padding: 12px 14px;
+    max-width: 90%;
+    font-size: 13px;
+    line-height: 1.7;
+    white-space: pre-line;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .msg-bubble:last-child { margin-bottom: 0; }
+  .msg-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .msg-btn {
+    display: block;
+    text-align: center;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: #22c55e;
+  }
+  .msg-btn.blue { background: #3b82f6; }
+  .msg-btn.sec { background: #fff; color: #22c55e; border: 2px solid #22c55e; }
+  .msg-btn.warn { background: #f59e0b; }
+  .msg-btn.gray { background: #94a3b8; }
+
+  /* ── Branch section ── */
+  .branch-section { margin-top: 12px; }
+  .branch-label {
+    font-size: 11px; font-weight: 600; color: #64748b;
+    text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px;
+  }
+
+  .branch-tree { margin-top: 8px; }
+  .bt-row { display: flex; align-items: stretch; gap: 8px; margin-bottom: 6px; }
+  .bt-connector {
+    width: 20px; flex-shrink: 0; position: relative;
+  }
+  .bt-connector::before {
+    content: ''; position: absolute; left: 9px; top: 0; bottom: 50%;
+    width: 2px; background: #cbd5e1;
+  }
+  .bt-connector::after {
+    content: ''; position: absolute; left: 9px; top: 50%;
+    width: 11px; height: 2px; background: #cbd5e1;
+  }
+  .bt-row:first-child .bt-connector::before { top: 50%; }
+  .bt-row:last-child .bt-connector::before { bottom: 50%; }
+
+  .bt-node {
+    flex: 1; border-radius: 6px; padding: 8px 12px;
+    font-size: 12px; font-weight: 500;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .bt-result { font-size: 11px; font-weight: 600; white-space: nowrap; }
+
+  /* ── Clickable links ── */
+  a.jump-link {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dashed currentColor;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  a.jump-link:hover { opacity: .7; }
+
+  /* ── Colors ── */
+  .bg-green  { background: #dcfce7; color: #166534; }
+  .bg-yellow { background: #fef9c3; color: #854d0e; }
+  .bg-orange { background: #ffedd5; color: #9a3412; }
+  .bg-red    { background: #fee2e2; color: #991b1b; }
+  .bg-gray   { background: #f1f5f9; color: #475569; }
+  .bg-blue   { background: #dbeafe; color: #1e40af; }
+
+  .seg-badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 1px 7px; border-radius: 4px; vertical-align: middle;
+  }
+  .seg-a { background: #22c55e; color: #fff; }
+  .seg-b { background: #f59e0b; color: #fff; }
+  .seg-d { background: #94a3b8; color: #fff; }
+
+  .end-node {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 12px;
+  }
+  .end-green  { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+  .end-gray   { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+  .end-orange { background: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
+
+  /* ── Connectors ── */
+  .flow-arrow {
+    display: flex; flex-direction: column; align-items: center; padding: 8px 0;
+  }
+  .flow-arrow::before { content: ''; width: 2px; height: 24px; background: #94a3b8; }
+  .flow-arrow::after {
+    content: ''; width: 0; height: 0;
+    border-left: 6px solid transparent; border-right: 6px solid transparent;
+    border-top: 8px solid #94a3b8;
+  }
+  .flow-connector {
+    display: flex; align-items: center; justify-content: center;
+    padding: 12px 0; position: relative;
+  }
+  .flow-connector::before {
+    content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+    width: 2px; background: #cbd5e1;
+  }
+  .connector-label {
+    position: relative; z-index: 1;
+    font-size: 11px; font-weight: 500; color: #64748b;
+    background: #f5f7fa; padding: 2px 12px; border-radius: 12px;
+    border: 1px solid #e2e8f0;
+  }
+
+  /* ── Segment columns ── */
+  .segment-columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 12px; }
+  .segment-col { border-radius: 10px; padding: 14px; }
+  .segment-col h4 { font-size: 13px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .seg-items { display: flex; flex-direction: column; gap: 6px; }
+  .seg-item {
+    font-size: 12px; background: rgba(255,255,255,.7);
+    padding: 8px 10px; border-radius: 6px; line-height: 1.5;
+  }
+  .seg-result { font-weight: 600; font-size: 11px; margin-top: 3px; display: block; }
+
+  /* ── Survey grid ── */
+  .survey-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .survey-q {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 8px; padding: 10px 12px; font-size: 12px;
+  }
+  .survey-q .q-label { font-weight: 600; color: #334155; margin-bottom: 4px; font-size: 11px; }
+  .survey-q .q-options { color: #64748b; font-size: 11px; line-height: 1.6; }
+
+  /* ── Auto-reply area ── */
+  .auto-reply {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border-left: 3px solid #cbd5e1;
+    border-radius: 0 8px 8px 0;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #475569;
+  }
+  .auto-reply-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    margin-bottom: 4px;
+  }
+
+  /* ── Branch grid ── */
+  .branch-grid { display: grid; gap: 8px; }
+  .branch-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .branch-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .branch-item {
+    border-radius: 8px; padding: 10px 12px; font-size: 12px; font-weight: 500;
+  }
+  .branch-item .count { font-size: 10px; font-weight: 400; color: rgba(0,0,0,.5); display: block; margin-top: 2px; }
+  .branch-item .result { font-size: 11px; font-weight: 600; margin-top: 4px; padding-top: 4px; border-top: 1px solid rgba(0,0,0,.08); }
+
+  /* ── Loop ── */
+  .loop-back {
+    margin-top: 16px; padding: 14px 20px;
+    background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+    border: 1px dashed #3b82f6; border-radius: 10px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13px; font-weight: 500; color: #1e40af;
+  }
+
+  /* ── Feedback area ── */
+  .feedback-area {
+    margin-top: 16px;
+    border-top: 1px dashed #e2e8f0;
+    padding-top: 12px;
+  }
+  .feedback-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6366f1;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all .15s;
+    user-select: none;
+  }
+  .feedback-toggle:hover { background: #e0e7ff; }
+  .feedback-toggle .fb-icon { font-size: 14px; }
+  .feedback-toggle .fb-count {
+    background: #6366f1;
+    color: #fff;
+    font-size: 10px;
+    padding: 0 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+    display: none;
+  }
+  .feedback-toggle .fb-count.has { display: inline-block; }
+
+  .feedback-body {
+    display: none;
+    margin-top: 10px;
+  }
+  .feedback-body.open { display: block; }
+
+  .feedback-textarea {
+    width: 100%;
+    min-height: 80px;
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #1a1a2e;
+    background: #fafaff;
+    resize: vertical;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .feedback-textarea:focus { border-color: #6366f1; background: #fff; }
+  .feedback-textarea::placeholder { color: #a5b4fc; }
+
+  .feedback-status {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 4px;
+    min-height: 16px;
+  }
+  .feedback-status.saved { color: #22c55e; }
+
+  /* ── Export button ── */
+  .export-bar {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6366f1;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .export-btn:hover { background: #e0e7ff; }
+  .export-btn.danger { color: #ef4444; background: #fef2f2; border-color: #fecaca; }
+  .export-btn.danger:hover { background: #fee2e2; }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    .segment-columns { grid-template-columns: 1fr; }
+    .survey-detail { grid-template-columns: 1fr; }
+    .branch-grid.cols-3 { grid-template-columns: 1fr; }
+    .nav-toc { top: 44px; }
+  }
+  @media print {
+    .legend, .nav-toc { position: static; }
+    body { background: #fff; }
+    .card { box-shadow: none; border: 1px solid #e2e8f0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Biyokuru Lステップ シナリオ フローチャート</h1>
+  <p>発送〜再診予約までの全体フロー｜クリックで各ステップにジャンプ</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot blue"></div>既存・維持</div>
+  <div class="legend-item"><div class="legend-dot green"></div>新規追加</div>
+  <div class="legend-item"><div class="legend-dot orange"></div>改修</div>
+  <div class="legend-item"><div class="legend-dot gray"></div>終了・無反応</div>
+</div>
+
+<div class="nav-toc">
+  <a href="#step-day0" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>Day 0</a>
+  <a href="#step-day3-confirm" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>+3日 確認</a>
+  <a href="#step-day3-survey" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>+3日 アンケ</a>
+  <a href="#step-day7" class="nav-btn"><div class="nav-dot" style="background:#22c55e"></div>+7日 Tips</a>
+  <a href="#step-day14" class="nav-btn"><div class="nav-dot" style="background:#22c55e"></div>+14日 チェック</a>
+  <a href="#step-day20" class="nav-btn"><div class="nav-dot" style="background:#f59e0b"></div>+20日 ヒアリング</a>
+  <a href="#step-day25" class="nav-btn"><div class="nav-dot" style="background:#22c55e"></div>+25日 再診</a>
+  <a href="#step-day35" class="nav-btn"><div class="nav-dot" style="background:#94a3b8"></div>+35日 最終</a>
+</div>
+
+<div class="export-bar">
+  <button class="export-btn" onclick="exportFeedback()">フィードバックをコピー</button>
+  <button class="export-btn danger" onclick="clearAllFeedback()">全コメントをクリア</button>
+</div>
+
+<div class="container">
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- Day 0: 発送確認 -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="step" id="step-day0">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Day 0</span>
+        <span class="card-title">発送確認</span>
+        <span class="badge badge-existing">既存</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：配送ステータス変更時｜配信形式：テキスト＋ボタン1つ</div>
+
+        <div class="msg-preview">
+          <div class="msg-bubble">【お薬発送のお知らせ】
+いつもBiyokuruをご利用いただきありがとうございます。
+処方薬を発送いたしました。
+
+お手元に届きましたら、下記の「届いた」ボタンをタップしてください。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">届いた</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="branch-section">
+          <div class="branch-label">分岐</div>
+          <div class="branch-grid cols-2">
+            <div class="branch-item bg-green">
+              「届いた」タップ
+              <span class="count">412 クリック</span>
+              <span class="result"><a href="#step-day3-survey" class="jump-link">→ +3日 アンケートへ</a></span>
+            </div>
+            <div class="branch-item bg-gray">
+              未タップ
+              <span class="result"><a href="#step-day3-confirm" class="jump-link">→ +3日 お届け確認へ</a></span>
+            </div>
+          </div>
+        <div class="feedback-area" data-step="day0">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span class="fb-icon">memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-day0" placeholder="Day 0 へのコメント・修正依頼をここに..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"></div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- +3日: お届け確認（未タップ者） -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="step" id="step-day3-confirm">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">+3日</span>
+        <span class="card-title">お届け確認（未タップ者向け）</span>
+        <span class="badge badge-existing">既存</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：Day 0「届いた」未タップ｜配信形式：テキスト＋ボタン2つ</div>
+
+        <div class="msg-preview">
+          <div class="msg-bubble">【お届け確認と体調の伺い】
+
+Biyokuruをご利用頂きありがとうございます。
+お薬は無事にお手元に届きましたでしょうか？</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">届いた</div>
+              <div class="msg-btn gray">届いていない</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="branch-section">
+          <div class="branch-label">分岐</div>
+          <div class="branch-grid cols-2">
+            <div class="branch-item bg-green">
+              「届いた」
+              <span class="count">471 クリック</span>
+              <span class="result"><a href="#step-day3-survey" class="jump-link">→ アンケートへ合流</a></span>
+            </div>
+            <div class="branch-item bg-orange">
+              「届いていない」
+              <span class="count">24 クリック</span>
+              <span class="result">→ 配送確認対応 <span class="end-node end-orange">END</span></span>
+            </div>
+          </div>
+
+          <div class="auto-reply" style="margin-top:10px;">
+            <div class="auto-reply-label">「届いていない」の自動返信：</div>
+            ご状況をお知らせいただきありがとうございます。
+配送業者へ状況を確認いたします。
+申し訳ございませんが、少々お待ちいただけますでしょうか。
+          </div>
+        <div class="feedback-area" data-step="day3-confirm">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span class="fb-icon">memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-day3-confirm" placeholder="+3日 お届け確認 へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"></div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- +3日: アンケート -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="step" id="step-day3-survey">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">+3日</span>
+        <span class="card-title">アンケート（Q1〜Q4 + 満足度）</span>
+        <span class="badge badge-existing">既存</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：「届いた」タップ後｜配信形式：テキスト＋カルーセル4問</div>
+
+        <div class="msg-preview">
+          <div class="msg-bubble">お知らせいただきありがとうございます！
+
+Biyokuruでは、[name]様が無理なく安心して体調やお悩みを改善できるようサポートいたします。
+
+現在の服用状況や体調はいかがでしょうか？
+
+いただいた内容をもとに[name]様だけにアドバイス（副作用対処や続けるコツなど）をご案内します。</div>
+        </div>
+
+        <div class="survey-detail">
+          <div class="survey-q">
+            <div class="q-label">Q1: 服用はすでに始めていますか？</div>
+            <div class="q-options">はい（399クリック）/ まだこれから（425クリック）</div>
+          </div>
+          <div class="survey-q">
+            <div class="q-label">Q2: 不安に感じている点は？</div>
+            <div class="q-options">副作用が心配 / 飲み忘れが心配 / 効果が出るか不安 / 特にない</div>
+          </div>
+          <div class="survey-q">
+            <div class="q-label">Q3: サポートがあった方が良い？</div>
+            <div class="q-options">体調チェック / 栄養アドバイス希望 / LINE相談希望 / 不要<br><strong>→ <a href="#step-day7" class="jump-link">+7日Tipsの出し分けに使用</a></strong></div>
+          </div>
+          <div class="survey-q">
+            <div class="q-label">Q4: 満足度（3段階）</div>
+            <div class="q-options">★★★ → Google口コミ依頼<br>★★ / ★ → 改善フォーム</div>
+          </div>
+        <div class="feedback-area" data-step="day3-survey">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span class="fb-icon">memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-day3-survey" placeholder="+3日 アンケート へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-connector">
+    <span class="connector-label">全ルート合流 → 以下は新規追加</span>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- +7日: 服用Tips配信 -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="step" id="step-day7">
+    <div class="card card-border-green">
+      <div class="card-header">
+        <span class="card-day">+7日</span>
+        <span class="card-title">服用Tips配信</span>
+        <span class="badge badge-new">NEW</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：発送日から7日後｜配信形式：テキスト2吹き出し（返信不要）｜配信除外：未到達者</div>
+
+        <div class="branch-section">
+          <div class="branch-label">Q3回答で出し分け</div>
+
+          <!-- 体調チェック希望 -->
+          <div style="margin-bottom:16px;">
+            <div style="font-size:12px;font-weight:600;color:#166534;margin-bottom:6px;">Q3 = 体調チェック希望の場合：</div>
+            <div class="msg-preview">
+              <div class="msg-bubble">こんにちは、Biyokuruです。
+
+お薬を始めて1週間ですね。
+最初の1〜2週間は体が慣れる期間です。
+よくあるご質問にお答えしますので、参考にしてみてください。</div>
+              <div class="msg-bubble">Q. 吐き気や胃もたれがある
+→ 食後に服用すると軽減されることが多いです。脂っこい食事を控えめにするのも有効です。
+
+Q. 注射した部分が赤くなった
+→ 一時的な反応です。冷やすと落ち着きます。赤みが数日続く場合はご相談ください。
+
+Q. 食欲が落ちすぎて食べられない
+→ 無理に食べなくて大丈夫ですが、水分とタンパク質（豆腐、鶏肉、ヨーグルト等）は意識してみてください。
+
+何か気になることがあれば、このLINEにそのままメッセージをお送りください。</div>
+            </div>
+          </div>
+
+          <!-- 栄養アドバイス希望 -->
+          <div style="margin-bottom:16px;">
+            <div style="font-size:12px;font-weight:600;color:#1e40af;margin-bottom:6px;">Q3 = 栄養アドバイス希望の場合：</div>
+            <div class="msg-preview">
+              <div class="msg-bubble">こんにちは、Biyokuruです。
+
+お薬を始めて1週間ですね。
+この時期は食欲の変化を感じる方が多いので、栄養のポイントをお伝えします。</div>
+              <div class="msg-bubble">Q. 食欲がなくて食べられない
+→ 無理に量を食べる必要はありません。水分とタンパク質（豆腐、鶏肉、ヨーグルト等）を意識してみてください。
+
+Q. 何を食べればいい？
+→ 脂っこいものは控えめにし、消化の良い食事がおすすめです。少量をこまめに摂るのも効果的です。
+
+Q. サプリメントは飲んでいい？
+→ 基本的に問題ありませんが、気になる場合は次回の診察時にご相談ください。
+
+何か気になることがあれば、このLINEにそのままメッセージをお送りください。</div>
+            </div>
+          </div>
+
+          <!-- LINE相談希望 -->
+          <div style="margin-bottom:16px;">
+            <div style="font-size:12px;font-weight:600;color:#7c3aed;margin-bottom:6px;">Q3 = LINE相談希望の場合：</div>
+            <div class="msg-preview">
+              <div class="msg-bubble">こんにちは、Biyokuruです。
+
+お薬を始めて1週間ですね。
+何か気になることや不安な点はございませんか？
+
+このLINEでいつでもご相談いただけます。些細なことでもお気軽にメッセージをお送りください。スタッフが確認し、必要に応じて医師にお繋ぎいたします。</div>
+              <div class="msg-bubble">参考までに、よくあるご質問をお伝えします。
+
+Q. 副作用が心配
+→ 最も多いのは軽い吐き気です。多くの方は1〜2週間で落ち着きます。
+
+Q. 効果はいつ頃から出る？
+→ 食欲の変化は1〜2週間、体重の変化は1ヶ月前後で感じる方が多いです。
+
+Q. いつ注射するのがいい？
+→ 曜日を決めて、毎週同じ曜日に打つのがおすすめです。</div>
+            </div>
+          </div>
+
+          <!-- 不要 -->
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#854d0e;margin-bottom:6px;">Q3 = 不要の場合：</div>
+            <div class="msg-preview">
+              <div class="msg-bubble">こんにちは、Biyokuruです。
+
+お薬を始めて1週間ですね。
+参考までに、よくあるご質問をお伝えします。</div>
+              <div class="msg-bubble">Q. いつ注射するのがいい？
+→ 曜日を決めて、毎週同じ曜日に打つのがおすすめです。
+
+Q. 副作用が心配
+→ 最も多いのは軽い吐き気です。多くの方は1〜2週間で落ち着きます。
+
+Q. 効果はいつ頃から出る？
+→ 食欲の変化は1〜2週間、体重の変化は1ヶ月前後で感じる方が多いです。
+
+何か気になることがあれば、このLINEにそのままメッセージをお送りください。</div>
+            </div>
+          </div>
+        <div class="feedback-area" data-step="day7">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span class="fb-icon">memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-day7" placeholder="+7日 服用Tips へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"></div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- +14日: 体調チェックイン -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="step" id="step-day14">
+    <div class="card card-border-green">
+      <div class="card-header">
+        <span class="card-day">+14日</span>
+        <span class="card-title">体調チェックイン</span>
+        <span class="badge badge-new">NEW ── セグメント分岐の起点</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：発送日から14日後｜配信形式：テキスト＋ボタン4つ</div>
+
+        <div class="msg-preview">
+          <div class="msg-bubble">こんにちは。
+お薬を始めて2週間ほどになりますね。
+
+体調はいかがですか？
+当てはまるものをタップしてください。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">順調です</div>
+              <div class="msg-btn blue">少し変化を感じています</div>
+              <div class="msg-btn sec">あまり変化がない</div>
+              <div class="msg-btn warn">気になることがある</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="branch-section">
+          <div class="branch-label">分岐 → セグメント振り分け</div>
+          <div class="branch-tree">
+            <div class="bt-row">
+              <div class="bt-connector"></div>
+              <div class="bt-node bg-green">
+                「順調です」
+                <span class="bt-result"><span class="seg-badge seg-a">A</span> <a href="#step-day20" class="jump-link">→ +20日セグA</a></span>
+              </div>
+            </div>
+            <div class="bt-row">
+              <div class="bt-connector"></div>
+              <div class="bt-node bg-green">
+                「少し変化を感じています」
+                <span class="bt-result"><span class="seg-badge seg-a">A</span> <a href="#step-day20" class="jump-link">→ +20日セグA</a></span>
+              </div>
+            </div>
+            <div class="bt-row">
+              <div class="bt-connector"></div>
+              <div class="bt-node bg-yellow">
+                「あまり変化がない」
+                <span class="bt-result"><span class="seg-badge seg-b">B</span> <a href="#step-day20" class="jump-link">→ +20日セグB</a></span>
+              </div>
+            </div>
+            <div class="bt-row">
+              <div class="bt-connector"></div>
+              <div class="bt-node bg-orange">
+                「気になることがある」
+                <span class="bt-result"><span class="end-node end-orange">スタッフ通知</span></span>
+              </div>
+            </div>
+            <div class="bt-row">
+              <div class="bt-connector"></div>
+              <div class="bt-node bg-gray">
+                未タップ（3日経過後）
+                <span class="bt-result"><span class="seg-badge seg-d">D</span> <a href="#step-day20" class="jump-link">→ +20日セグD</a></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 自動返信メッセージ -->
+        <div class="auto-reply" style="margin-top:14px;">
+          <div class="auto-reply-label">「順調です」の自動返信：</div>
+          順調とのこと、安心しました。この調子で続けていきましょう。1週間後にまたお声がけしますね。
+        </div>
+        <div class="auto-reply">
+          <div class="auto-reply-label">「少し変化を感じています」の自動返信：</div>
+          変化を感じ始めているんですね。食欲の変化や体の軽さなど、小さな変化も大事なサインです。引き続き、無理のないペースで続けてみてください。
+        </div>
+        <div class="auto-reply">
+          <div class="auto-reply-label">「あまり変化がない」の自動返信：</div>
+          お薬の効果には個人差があり、変化が出るまでに3〜4週間かかる方もいらっしゃいます。今の段階では、まだ焦る必要はありません。引き続き、様子を見ていきましょう。<br><br>もし気になることやご不安な点がございましたら、お気軽にこちらのLINEでお尋ねください。
+        </div>
+        <div class="auto-reply">
+          <div class="auto-reply-label">「気になることがある」の自動返信：</div>
+          ご心配をおかけして申し訳ありません。よろしければ、気になっている内容をこのLINEに送っていただけますか？スタッフが確認し、必要に応じて医師にお繋ぎします。
+        </div>
+
+        <div class="feedback-area" data-step="day14">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span class="fb-icon">memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-day14" placeholder="+14日 体調チェックイン へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-connector">
+    <span class="connector-label">セグメント別に分岐</span>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- +20日: 効果実感ヒアリング -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="step" id="step-day20">
+    <div class="card card-border-orange">
+      <div class="card-header">
+        <span class="card-day">+20日</span>
+        <span class="card-title">効果実感ヒアリング</span>
+        <span class="badge badge-modified">改修</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：発送日から20日後｜配信形式：セグメント別に3パターン</div>
+
+        <div class="segment-columns">
+          <!-- Segment A -->
+          <div class="segment-col" style="background:#f0fdf4;border:1px solid #bbf7d0;">
+            <h4><span class="seg-badge seg-a">A</span> 順調・変化あり</h4>
+
+            <div class="msg-preview" style="margin:8px 0;">
+              <div class="msg-bubble" style="font-size:12px;">こんにちは。
+お薬を始めて約3週間ですね。
+体の変化について教えてください。</div>
+            </div>
+
+            <div class="seg-items">
+              <div class="seg-item">体重が減ってきた<span class="seg-result" style="color:#166534;"><a href="#step-day25" class="jump-link">→ +25日パターンA</a></span></div>
+              <div class="seg-item">食欲が落ち着いてきた<span class="seg-result" style="color:#166534;"><a href="#step-day25" class="jump-link">→ +25日パターンA</a></span></div>
+              <div class="seg-item">体調が良くなった<span class="seg-result" style="color:#166534;"><a href="#step-day25" class="jump-link">→ +25日パターンA</a></span></div>
+              <div class="seg-item">まだよくわからない<span class="seg-result" style="color:#854d0e;"><a href="#step-day25" class="jump-link">→ +25日パターンB</a></span></div>
+              <div class="seg-item">自分には合わないかも<span class="seg-result" style="color:#991b1b;">→ 医師相談フロー</span></div>
+            </div>
+          </div>
+
+          <!-- Segment B -->
+          <div class="segment-col" style="background:#fefce8;border:1px solid #fde68a;">
+            <h4><span class="seg-badge seg-b">B</span> 変化なし・要対応後</h4>
+
+            <div class="msg-preview" style="margin:8px 0;">
+              <div class="msg-bubble" style="font-size:12px;">こんにちは。
+お薬を始めて3週間ほどになりますね。
+その後、体調はいかがですか？</div>
+            </div>
+
+            <div class="seg-items">
+              <div class="seg-item">少しずつ変化を感じる<span class="seg-result" style="color:#854d0e;"><a href="#step-day25" class="jump-link">→ +25日パターンB</a></span></div>
+              <div class="seg-item">まだ変わらない<span class="seg-result" style="color:#854d0e;"><a href="#step-day25" class="jump-link">→ +25日パターンB</a></span></div>
+              <div class="seg-item">つらい・合わない<span class="seg-result" style="color:#991b1b;">→ 医師相談フロー</span></div>
+            </div>
+          </div>
+
+          <!-- Segment D -->
+          <div class="segment-col" style="background:#f8fafc;border:1px solid #e2e8f0;">
+            <h4><span class="seg-badge seg-d">D</span> 無反応</h4>
+
+            <div class="msg-preview" style="margin:8px 0;">
+              <div class="msg-bubble" style="font-size:12px;">こんにちは。
+お薬を始めて3週間ほどになります。
+その後の体調はいかがですか？</div>
+            </div>
+
+            <div class="seg-items">
+              <div class="seg-item">順調です<span class="seg-result" style="color:#166534;"><a href="#step-day25" class="jump-link">→ +25日パターンA</a></span></div>
+              <div class="seg-item">相談したいことがある<span class="seg-result" style="color:#9a3412;">→ スタッフ対応</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 主要な自動返信 -->
+        <div class="auto-reply" style="margin-top:14px;">
+          <div class="auto-reply-label">セグA：効果実感ありの自動返信</div>
+          変化を感じていただけているようで、よかったです。この時期の変化は、お薬がしっかり効いているサインです。引き続き、水分補給とタンパク質を意識して過ごしてみてください。数日後に、今後の継続についてご案内をお送りしますね。
+        </div>
+        <div class="auto-reply">
+          <div class="auto-reply-label">セグA：「合わないかも」の自動返信</div>
+          合わないと感じていらっしゃるんですね。お薬には相性がありますので、無理に続ける必要はありません。用量の調整や、別のお薬への変更も可能です。<br><br>よろしければ、医師に一度ご相談ください。下のボタンからお手続きいただけます。
+          <div class="msg-btns" style="margin-top:8px;">
+            <div class="msg-btn">再診を予約して相談する</div>
+          </div>
+        </div>
+        <div class="auto-reply">
+          <div class="auto-reply-label">セグB：「まだ変わらない」の自動返信</div>
+          効果が出るまでに時間がかかる場合もあります。次回の診察で、用量の調整やお薬の変更についてご相談いただくことも可能です。焦らず進めていきましょう。
+        </div>
+
+        <div class="feedback-area" data-step="day20">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span class="fb-icon">memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-day20" placeholder="+20日 効果実感ヒアリング へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"></div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- +25日: 再診のご案内 -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="step" id="step-day25">
+    <div class="card card-border-green">
+      <div class="card-header">
+        <span class="card-day">+25日</span>
+        <span class="card-title">再診のご案内</span>
+        <span class="badge badge-new">NEW ── ここで初めて「再診」に言及</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：発送日から25日後｜マンジャロ4本入り=約4週間分→残り数日のタイミング</div>
+
+        <div class="segment-columns">
+          <!-- パターンA -->
+          <div class="segment-col" style="background:#f0fdf4;border:1px solid #bbf7d0;">
+            <h4 style="color:#166534;">パターンA：効果実感あり</h4>
+            <div class="msg-preview" style="margin:8px 0;">
+              <div class="msg-bubble" style="font-size:12px;">こんにちは、Biyokuruです。
+その後、お薬のご様子はいかがでしょうか。
+
+効果を感じていただけているとのこと、よかったです。そろそろお薬の残りが少なくなるころかと思います。
+
+継続をご希望の場合は、再診のご予約をお願いいたします。</div>
+              <div class="msg-bubble" style="font-size:12px;">
+                <div class="msg-btns">
+                  <div class="msg-btn">再診を予約する</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- パターンB -->
+          <div class="segment-col" style="background:#fefce8;border:1px solid #fde68a;">
+            <h4 style="color:#854d0e;">パターンB：変化なし / 不明</h4>
+            <div class="msg-preview" style="margin:8px 0;">
+              <div class="msg-bubble" style="font-size:12px;">こんにちは、Biyokuruです。
+その後、お薬のご様子はいかがでしょうか。
+
+お薬の効果には個人差があり、1〜2ヶ月で変化が安定してくる方も多くいらっしゃいます。
+
+次の診察では、現在の状況を踏まえて医師と今後の方針をご相談いただけます。
+
+・今のお薬を継続する
+・用量を調整する
+・別のお薬に変更する
+
+いずれの選択肢もございますので、お気軽にご相談ください。</div>
+              <div class="msg-bubble" style="font-size:12px;">
+                <div class="msg-btns">
+                  <div class="msg-btn blue">医師に相談する（再診予約）</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- パターンC -->
+          <div class="segment-col" style="background:#f8fafc;border:1px solid #e2e8f0;">
+            <h4 style="color:#475569;">パターンC：無反応</h4>
+            <div class="msg-preview" style="margin:8px 0;">
+              <div class="msg-bubble" style="font-size:12px;">こんにちは、Biyokuruです。
+その後、お薬の調子はいかがでしょうか。
+
+お薬の残りが少なくなっているかと思います。
+継続をご希望の場合は、こちらからご予約いただけます。</div>
+              <div class="msg-bubble" style="font-size:12px;">
+                <div class="msg-btns">
+                  <div class="msg-btn">再診を予約する</div>
+                </div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:#64748b;margin-top:6px;">短くシンプル。ボタン1つだけ。</div>
+          </div>
+        </div>
+
+        <div class="branch-section" style="margin-top:14px;">
+          <div class="branch-grid cols-2">
+            <div class="branch-item bg-green">
+              再診予約
+              <span class="result"><span class="end-node end-green">再診完了</span> → <a href="#step-day0" class="jump-link">次回配送時にDay 0へループ</a></span>
+            </div>
+            <div class="branch-item bg-gray">
+              未予約
+              <span class="result"><a href="#step-day35" class="jump-link">→ +35日 最終リマインドへ</a></span>
+            </div>
+          </div>
+        </div>
+        <div class="feedback-area" data-step="day25">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span class="fb-icon">memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-day25" placeholder="+25日 再診のご案内 へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-connector">
+    <span class="connector-label">未予約者のみ</span>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- +35日: 最終リマインド -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="step" id="step-day35">
+    <div class="card card-border-gray">
+      <div class="card-header">
+        <span class="card-day">+35日</span>
+        <span class="card-title">最終リマインド</span>
+        <span class="badge" style="background:#f1f5f9;color:#64748b;">最終配信</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：発送日から35日後｜条件：タグ「再診_予約タップ」「再診_LINE希望」がない人のみ</div>
+
+        <div class="msg-preview">
+          <div class="msg-bubble">こんにちは。
+
+お薬がなくなるころかと思いますが、体調はいかがですか。
+
+再診をご希望の場合は、こちらからご予約いただけます。
+何かご不明な点があれば、お気軽にお問い合わせください。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">再診を予約する</div>
+              <div class="msg-btn sec">質問・相談がある</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="branch-section">
+          <div class="branch-label">分岐（これが最後）</div>
+          <div class="branch-tree">
+            <div class="bt-row">
+              <div class="bt-connector"></div>
+              <div class="bt-node bg-green">
+                「再診を予約する」
+                <span class="bt-result"><span class="end-node end-green">再診完了</span> → <a href="#step-day0" class="jump-link">Day 0へループ</a></span>
+              </div>
+            </div>
+            <div class="bt-row">
+              <div class="bt-connector"></div>
+              <div class="bt-node bg-yellow">
+                「質問・相談がある」
+                <span class="bt-result"><span class="end-node end-orange">スタッフ対応</span></span>
+              </div>
+            </div>
+            <div class="bt-row">
+              <div class="bt-connector"></div>
+              <div class="bt-node bg-gray">
+                未タップ
+                <span class="bt-result"><span class="end-node end-gray">シナリオ終了 ── これ以上追わない</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="auto-reply" style="margin-top:12px; border-left-color: #f59e0b;">
+          <div class="auto-reply-label">設計意図</div>
+          医療サービスとして、過度な追客は信頼を損なう。再診は患者の意思で決めるもの。未タップの場合はタグ「シナリオ_完了_未再診」を自動付与し、休眠ユーザーセグメントとして管理。
+        </div>
+        <div class="feedback-area" data-step="day35">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span class="fb-icon">memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-day35" placeholder="+35日 最終リマインド へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Loop back ── -->
+  <div style="padding-top: 20px;">
+    <div class="loop-back">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M16 4C9.373 4 4 9.373 4 16s5.373 12 12 12 12-5.373 12-12" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M28 4v8h-8" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <strong><a href="#step-day0" class="jump-link" style="color:#1e40af;">再診完了 → 次回配送時に Day 0（発送確認）へループ</a></strong><br>
+        <span style="font-size:12px; color:#64748b;">リピートするたびにタグが蓄積され、LTV分析やセグメント配信の精度が上がる</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── クリックでスクロール＋ハイライト ──
+document.querySelectorAll('a.jump-link').forEach(link => {
+  link.addEventListener('click', function(e) {
+    const href = this.getAttribute('href');
+    if (!href || !href.startsWith('#')) return;
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const card = target.querySelector('.card');
+    if (card) {
+      card.classList.add('highlight');
+      setTimeout(() => card.classList.remove('highlight'), 1500);
+    }
+  });
+});
+
+// ── フィードバック機能 ──
+let saveTimer = null;
+
+function toggleFeedback(btn) {
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+  if (body.classList.contains('open')) {
+    body.querySelector('textarea').focus();
+  }
+}
+
+function saveFeedback(textarea) {
+  const key = textarea.dataset.key;
+  const status = textarea.nextElementSibling;
+
+  // デバウンス: 500ms後に保存
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    localStorage.setItem(key, textarea.value);
+    status.textContent = '保存しました';
+    status.className = 'feedback-status saved';
+    setTimeout(() => { status.textContent = ''; status.className = 'feedback-status'; }, 2000);
+    updateBadge(textarea);
+  }, 500);
+}
+
+function updateBadge(textarea) {
+  const area = textarea.closest('.feedback-area');
+  const badge = area.querySelector('.fb-count');
+  const val = textarea.value.trim();
+  if (val) {
+    const lines = val.split('\n').filter(l => l.trim()).length;
+    badge.textContent = lines;
+    badge.classList.add('has');
+  } else {
+    badge.classList.remove('has');
+  }
+}
+
+// ── ページ読み込み時にローカルストレージから復元 ──
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.feedback-textarea').forEach(ta => {
+    const saved = localStorage.getItem(ta.dataset.key);
+    if (saved) {
+      ta.value = saved;
+      updateBadge(ta);
+      // コメントがある場合は自動で開く
+      const body = ta.closest('.feedback-body');
+      body.classList.add('open');
+    }
+  });
+});
+
+// ── フィードバックをまとめてクリップボードにコピー ──
+function exportFeedback() {
+  const lines = [];
+  document.querySelectorAll('.feedback-textarea').forEach(ta => {
+    const val = ta.value.trim();
+    if (val) {
+      const step = ta.dataset.key.replace('fb-', '').replace('day', 'Day ').replace('-', ' ');
+      lines.push(`【${step}】\n${val}`);
+    }
+  });
+
+  if (lines.length === 0) {
+    alert('まだフィードバックが入力されていません');
+    return;
+  }
+
+  const text = '=== Biyokuru シナリオ フィードバック ===\n\n' + lines.join('\n\n---\n\n');
+
+  navigator.clipboard.writeText(text).then(() => {
+    alert('フィードバックをクリップボードにコピーしました（' + lines.length + '件）');
+  }).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('フィードバックをクリップボードにコピーしました（' + lines.length + '件）');
+  });
+}
+
+// ── 全コメントクリア ──
+function clearAllFeedback() {
+  if (!confirm('全てのフィードバックを削除しますか？この操作は元に戻せません。')) return;
+  document.querySelectorAll('.feedback-textarea').forEach(ta => {
+    ta.value = '';
+    localStorage.removeItem(ta.dataset.key);
+    updateBadge(ta);
+    ta.closest('.feedback-body').classList.remove('open');
+  });
+}
+</script>
+
+</body>
+</html>
