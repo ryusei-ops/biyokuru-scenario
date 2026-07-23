@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <!--
   === 変更履歴 ===
+  [2026-07-23] 追記（相関分析ふまえた改善案）
+  - Day 20: 継続希望の設問を新設／回答内容ベースのフォロー配信（体重停滞・薬切れ前・早期効果実感）を追加
+    ※ 本文中は紫色の「追記」ブロックで明示
+
   [2026-04-08] フィードバック反映 第2弾
   - Day 0: 問い合わせ案内・GLP-1 QAリンク・署名を追加
   - Day 2: 冒頭を「【お届け確認と体調のお伺い】」タイトル付きに変更
@@ -414,6 +418,34 @@
   .export-btn:hover { background: #e0e7ff; }
   .export-btn.danger { color: #ef4444; background: #fef2f2; border-color: #fecaca; }
   .export-btn.danger:hover { background: #fee2e2; }
+
+  /* ── Addendum (追記) ── */
+  .addendum {
+    margin-top: 16px;
+    border: 2px dashed #a855f7;
+    border-radius: 10px;
+    background: #faf5ff;
+    padding: 14px 16px 16px;
+  }
+  .addendum-label {
+    display: inline-block;
+    font-size: 11px; font-weight: 700; color: #fff;
+    background: #a855f7; padding: 3px 12px; border-radius: 6px;
+    margin-bottom: 10px; letter-spacing: .02em;
+  }
+  .addendum h4 {
+    font-size: 13px; font-weight: 700; color: #6b21a8;
+    margin: 14px 0 6px; display: flex; align-items: center; gap: 6px;
+  }
+  .addendum h4:first-of-type { margin-top: 4px; }
+  .addendum p { font-size: 12px; color: #475569; margin: 4px 0 8px; }
+  .addendum .route { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+  .addendum .route-item {
+    font-size: 12px; background: #fff; border: 1px solid #e9d5ff;
+    border-radius: 8px; padding: 8px 12px; line-height: 1.6;
+  }
+  .addendum .route-item b { color: #6b21a8; }
+  .addendum .route-item .why { color: #94a3b8; font-size: 11px; }
 
   /* ── Responsive ── */
   @media (max-width: 700px) {
@@ -938,6 +970,39 @@ Q. 次回の診察ではどんなことを相談できる？
           <div class="auto-reply-label">セグD：「相談したいことがある」の自動返信</div>
           ありがとうございます。ご質問やご相談がございましたら、このLINEにそのままメッセージをお送りください。スタッフが確認し、ご回答いたします。
         </div>
+
+        <!-- ═══════════ 追記 2026-07-23 ═══════════ -->
+        <div class="addendum">
+          <div class="addendum-label">追記 2026-07-23 ｜ 相関分析ふまえた改善案</div>
+
+          <h4>① 継続希望の設問を新設 <span class="badge badge-new">新設</span></h4>
+          <div class="survey-q">
+            <div class="q-label">この後もお薬の継続を希望しますか？</div>
+            <div class="q-options">はい ／ 検討中 ／ いいえ（希望しない）</div>
+          </div>
+          <p>回答をタグ化し、「継続意向 × 実際の再購入」をファネルで可視化する（現状は再診＝リピート率でしか把握できていない）。「検討中／いいえ」はLINE相談・個別フォローへ誘導。</p>
+
+          <h4>② 回答内容ベースのフォロー配信 <span class="badge badge-new">新設</span></h4>
+          <p>アンケート×購入相関（会員番号突合）で、回答内容ごとに再購入率が大きく異なると判明。回答の中身でフォローを出し分ける。</p>
+          <div class="route">
+            <div class="route-item"><b>「体重が落ちない／停滞」相談</b> → 体重停滞フォロー（停滞期の解説＋次サイクルの動機づけ）<br><span class="why">※ 最も高関与・再購入58%の優良層。離脱予備軍ではなく重点フォロー対象。</span></div>
+            <div class="route-item"><b>「順調・変化あり」</b> → 薬切れ前リマインドを強化し確実に2回目へ（<a href="#step-day25" class="jump-link">→ +25日</a>）<br><span class="why">※ 満足でも約6割が2回目未達。『満足なのに継続しない』ギャップを埋める。</span></div>
+            <div class="route-item"><b>「まだ変わらない／変化なし」</b> → 早期効果実感フォロー（効果の出方の説明・継続の意義。Day14時点から）<br><span class="why">※ 再購入19%＝離脱リスクが最も高い層。早期の引き止めが必要。</span></div>
+          </div>
+          <p style="margin-top:8px;">根拠データ：スプレッドシート「アンケート×購入相関」タブ（2026-07-20時点）。</p>
+
+          <div class="msg-preview" style="margin-top:10px;">
+            <div class="auto-reply-label" style="margin-bottom:6px;">体重停滞フォロー 文面（案）</div>
+            <div class="msg-bubble" style="font-size:12px;">服用を始めて3週間前後は、体重の変化が緩やかになりやすい時期です（停滞期）。
+この時期は食事・水分・睡眠を整えつつ、服用を続けることが大切です。
+停滞の続き方や体調で気になる点は、診察でご相談いただけます。</div>
+            <div class="msg-btns">
+              <div class="msg-btn warn">次回の診察を予約する</div>
+            </div>
+          </div>
+          <p style="margin-top:8px;font-size:11px;color:#94a3b8;">※ 文面は医療広告ガイドライン／薬機法の最終チェック要（効果の断定・体験談風表現は不可）。</p>
+        </div>
+        <!-- ═══════════ /追記 ═══════════ -->
 
         <div class="feedback-area" data-step="day20">
           <div class="feedback-toggle" onclick="toggleFeedback(this)">
