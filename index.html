@@ -4,6 +4,8 @@
   [2026-07-23] 追記（相関分析ふまえた改善案）
   - Day 20: 継続希望の設問を新設／回答内容ベースのフォロー配信（体重停滞・薬切れ前・早期効果実感）を追加
     ※ 本文中は紫色の「追記」ブロックで明示
+  - 見やすさ整理: 前回(4月)の「NEW/改修」バッジを撤去し、カード色・ナビ色・凡例を統一。
+    新規と分かるのは今回の紫「追記」ブロックのみに限定。
 
   [2026-04-08] フィードバック反映 第2弾
   - Day 0: 問い合わせ案内・GLP-1 QAリンク・署名を追加
@@ -469,22 +471,21 @@
 </div>
 
 <div class="legend">
-  <div class="legend-item"><div class="legend-dot blue"></div>既存・維持</div>
-  <div class="legend-item"><div class="legend-dot green"></div>新規追加</div>
-  <div class="legend-item"><div class="legend-dot orange"></div>改修</div>
+  <div class="legend-item"><div class="legend-dot blue"></div>通常ステップ</div>
   <div class="legend-item"><div class="legend-dot gray"></div>終了・無反応</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#a855f7;"></div>今回の追記（2026-07-23）</div>
 </div>
 
 <div class="nav-toc">
   <a href="#step-day0" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>Day 0 発送</a>
   <a href="#step-day2" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>+2日 確認+アンケ</a>
-  <a href="#step-day7" class="nav-btn"><div class="nav-dot" style="background:#22c55e"></div>+7日 治療Tips</a>
-  <a href="#step-day14" class="nav-btn"><div class="nav-dot" style="background:#22c55e"></div>+14日 チェック</a>
-  <a href="#step-day20" class="nav-btn"><div class="nav-dot" style="background:#f59e0b"></div>+20日 ヒアリング</a>
-  <a href="#step-day25" class="nav-btn"><div class="nav-dot" style="background:#22c55e"></div>+25日 再診</a>
+  <a href="#step-day7" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>+7日 治療Tips</a>
+  <a href="#step-day14" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>+14日 チェック</a>
+  <a href="#step-day20" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>+20日 ヒアリング</a>
+  <a href="#step-day25" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>+25日 再診</a>
   <a href="#step-day35" class="nav-btn"><div class="nav-dot" style="background:#94a3b8"></div>+35日 最終</a>
-  <a href="#step-day60" class="nav-btn"><div class="nav-dot" style="background:#f59e0b"></div>+60日 掘り起こし</a>
-  <a href="#step-day120" class="nav-btn"><div class="nav-dot" style="background:#f59e0b"></div>+120日 掘り起こし</a>
+  <a href="#step-day60" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>+60日 掘り起こし</a>
+  <a href="#step-day120" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>+120日 掘り起こし</a>
   <a href="#step-day180" class="nav-btn"><div class="nav-dot" style="background:#94a3b8"></div>+180日 休眠</a>
 </div>
 
@@ -513,7 +514,6 @@
       <div class="card-header">
         <span class="card-day">Day 0</span>
         <span class="card-title">発送連絡</span>
-        <span class="badge badge-modified">改修</span>
       </div>
       <div class="card-body">
         <div class="card-trigger">トリガー：配送ステータス変更時｜配信形式：テキストのみ（ボタンなし）</div>
@@ -568,7 +568,6 @@ https://drive.google.com/file/d/1Y4lSMlti-ICrs2vS8JMsZr6VIamM8Q7T/view?usp=drive
       <div class="card-header">
         <span class="card-day">+2日</span>
         <span class="card-title">配送確認 + アンケート</span>
-        <span class="badge badge-modified">改修 ── 統合</span>
       </div>
       <div class="card-body">
         <div class="card-trigger">トリガー：発送日から2日後｜配信形式：テキスト＋ボタン2つ → 届いた場合アンケートへ</div>
@@ -662,11 +661,10 @@ Biyokuruでは、[name]様が無理なく安心して治療を続けられるよ
   <!-- +7日: 治療Tips配信 -->
   <!-- ════════════════════════════════════════ -->
   <div class="step" id="step-day7">
-    <div class="card card-border-green">
+    <div class="card card-border-blue">
       <div class="card-header">
         <span class="card-day">+7日</span>
         <span class="card-title">治療Tips配信</span>
-        <span class="badge badge-new">NEW</span>
       </div>
       <div class="card-body">
         <div class="card-trigger">トリガー：発送日から7日後｜配信形式：テキスト2吹き出し（返信不要）｜配信除外：未到達者</div>
@@ -780,11 +778,10 @@ Q. 次回の診察ではどんなことを相談できる？
   <!-- +14日: 体調チェックイン -->
   <!-- ════════════════════════════════════════ -->
   <div class="step" id="step-day14">
-    <div class="card card-border-green">
+    <div class="card card-border-blue">
       <div class="card-header">
         <span class="card-day">+14日</span>
         <span class="card-title">体調チェックイン</span>
-        <span class="badge badge-new">NEW ── セグメント分岐の起点</span>
       </div>
       <div class="card-body">
         <div class="card-trigger">トリガー：発送日から14日後｜配信形式：テキスト＋ボタン4つ</div>
@@ -887,11 +884,10 @@ Q. 次回の診察ではどんなことを相談できる？
   <!-- +20日: 効果実感ヒアリング -->
   <!-- ════════════════════════════════════════ -->
   <div class="step" id="step-day20">
-    <div class="card card-border-orange">
+    <div class="card card-border-blue">
       <div class="card-header">
         <span class="card-day">+20日</span>
         <span class="card-title">効果実感ヒアリング</span>
-        <span class="badge badge-modified">改修</span>
       </div>
       <div class="card-body">
         <div class="card-trigger">トリガー：発送日から20日後｜配信形式：セグメント別に3パターン</div>
@@ -1025,11 +1021,10 @@ Q. 次回の診察ではどんなことを相談できる？
   <!-- +25日: 再診のご案内 -->
   <!-- ════════════════════════════════════════ -->
   <div class="step" id="step-day25">
-    <div class="card card-border-green">
+    <div class="card card-border-blue">
       <div class="card-header">
         <span class="card-day">+25日</span>
         <span class="card-title">再診のご案内</span>
-        <span class="badge badge-new">NEW ── ここで初めて「再診」に言及</span>
       </div>
       <div class="card-body">
         <div class="card-trigger">トリガー：発送日から25日後｜お薬の残量が少なくなるタイミング</div>
@@ -1226,11 +1221,10 @@ Q. 次回の診察ではどんなことを相談できる？
   <!-- +60日: 掘り起こし① -->
   <!-- ════════════════════════════════════════ -->
   <div class="step" id="step-day60">
-    <div class="card card-border-orange">
+    <div class="card card-border-blue">
       <div class="card-header">
         <span class="card-day">+60日</span>
         <span class="card-title">掘り起こし配信①</span>
-        <span class="badge badge-new">NEW</span>
       </div>
       <div class="card-body">
         <div class="card-trigger">トリガー：発送日から60日後｜条件：タグ「シナリオ_完了_未再診」がある人のみ</div>
@@ -1312,11 +1306,10 @@ Q. 次回の診察ではどんなことを相談できる？
   <!-- +120日: 掘り起こし② -->
   <!-- ════════════════════════════════════════ -->
   <div class="step" id="step-day120">
-    <div class="card card-border-orange">
+    <div class="card card-border-blue">
       <div class="card-header">
         <span class="card-day">+120日</span>
         <span class="card-title">掘り起こし配信②</span>
-        <span class="badge badge-new">NEW</span>
       </div>
       <div class="card-body">
         <div class="card-trigger">トリガー：発送日から120日後｜条件：+60日で未反応の人のみ</div>
@@ -1394,7 +1387,6 @@ Q. 次回の診察ではどんなことを相談できる？
       <div class="card-header">
         <span class="card-day">+180日</span>
         <span class="card-title">最終掘り起こし + 休眠タグ付与</span>
-        <span class="badge badge-new">NEW ── 休眠管理</span>
       </div>
       <div class="card-body">
         <div class="card-trigger">トリガー：発送日から180日後｜条件：+120日で未反応の人のみ｜タグ操作：自動で「休眠」タグを付与</div>
