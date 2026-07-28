@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <!--
   === 変更履歴 ===
-  [2026-07-28] 購入月数による分岐を追加（単月購入／複数月まとめ購入）
+  [2026-07-28] 単月購入／複数月まとめ購入への対応（同一メッセージ内に併記）
   - 背景: 発送日基準で回るため、複数月分まとめ購入の方はまだ薬が残っているのに Day25/35 で再診を
-    促してしまい違和感が出る。残量・再診系の配信だけを「お薬終了予定日」基準で出し分け。
-  - 服用立ち上がりフォロー（Day0/2/7/14/20）は両者共通で配信（この時期は全員が服用1ヶ月目のため）。
-  - Day25 に複数月購入向けの「経過フォロー」文面を追加。再診案内は終了予定日の約1週間前に後ろ倒し。
-  - Day35/60 のトリガーを「お薬終了予定日」基準の相対表記に変更。文面は共通。
+    促してしまい違和感が出る。
+  - 対応: 購入月数による送り分け（セグメント配信）は行えないため、残量・再診に関わるメッセージは
+    1通の中に「単月分をご購入の方は〜／複数月分をまとめてご購入の方は〜」を併記する方式に変更。
+  - 対象: Day25 再診案内（パターンA/C）・Day35 最終リマインド・Day60 掘り起こし①。
+  - 立ち上がりフォロー（Day0/2/7/14/20）は全員共通のため変更なし。
   ※ 本文中は緑色（teal）のブロックで明示。
 
   [2026-07-23] 追記（相関分析ふまえた改善案）
@@ -484,7 +485,7 @@
   <div class="legend-item"><div class="legend-dot blue"></div>通常ステップ</div>
   <div class="legend-item"><div class="legend-dot gray"></div>終了・無反応</div>
   <div class="legend-item"><div class="legend-dot" style="background:#a855f7;"></div>追記（2026-07-23）</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#0d9488;"></div>今回の追加：購入月数の分岐（2026-07-28）</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#0d9488;"></div>今回の追加：単月／複数月を併記（2026-07-28）</div>
 </div>
 
 <div class="nav-toc">
@@ -522,26 +523,15 @@
   <!-- ════════════════════════════════════════ -->
   <div style="margin-bottom:24px;border:2px solid #0d9488;border-radius:12px;background:#f0fdfa;overflow:hidden;">
     <div style="background:#0d9488;color:#fff;padding:10px 16px;font-size:13px;font-weight:700;">
-      購入月数による分岐 ｜ 単月購入 × 複数月まとめ購入（2026-07-28 追加）
+      単月購入 × 複数月まとめ購入への対応（2026-07-28）
     </div>
     <div style="padding:14px 16px 16px;font-size:13px;line-height:1.8;color:#334155;">
-      <p style="margin-bottom:10px;"><b>背景：</b>本シナリオは<b>発送日基準</b>で回ります。単月購入の方は約30日で薬が切れるため Day25／35 の再診案内が自然ですが、<b>複数月分をまとめて購入した方はまだ薬が残っている</b>ため、同じタイミングで再診を促すと違和感につながります。そこで、<b>「残量・再診」に関わる配信だけを購入月数に合わせて出し分け</b>ます。</p>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;">
-        <div style="background:#fff;border:1px solid #99f6e4;border-radius:8px;padding:10px 12px;">
-          <div style="font-weight:700;color:#0f766e;margin-bottom:4px;">① 共通トラック（服用の立ち上がりフォロー）</div>
-          Day0 発送 → +2日 配送確認 → +7日 Tips → +14日 体調 → +20日 効果ヒアリング<br>
-          <span style="font-size:12px;color:#64748b;">体調・効果の初期フォローは購入月数に関わらず<b>両者に同じ内容で配信</b>（この時期は全員が服用1ヶ月目のため）。</span>
-        </div>
-        <div style="background:#fff;border:1px solid #99f6e4;border-radius:8px;padding:10px 12px;">
-          <div style="font-weight:700;color:#0f766e;margin-bottom:4px;">② 残量・再診トラック（起点を出し分け）</div>
-          起点＝<b>お薬の終了予定日</b>に統一し、そこから逆算して配信。<br>
-          <span style="font-size:12px;color:#64748b;">・<b>単月購入</b>：終了予定≒発送+30日 → 従来どおり Day25／35 が該当<br>・<b>複数月購入（Nヶ月）</b>：終了予定≒発送+（N×30日）→ 残量案内・再診・最終リマインドを<b>同じ文面・同じ間隔で後ろ倒し</b></span>
-        </div>
+      <p style="margin-bottom:10px;"><b>背景：</b>本シナリオは<b>発送日基準</b>で回ります。単月購入の方は約30日で薬が切れるため Day25／35 の再診案内が自然ですが、<b>複数月分をまとめて購入した方はまだ薬が残っている</b>ため、同じタイミングで再診を促すと違和感につながります。</p>
+      <p style="margin-bottom:10px;"><b>対応方針：</b>購入月数による<b>送り分け（セグメント配信）は行いません</b>。残量・再診に関わるメッセージは、<b>1通の中に「単月分をご購入の方は〜／複数月分をまとめてご購入の方は〜」の両方を併記</b>し、どちらの方が読んでも違和感がないようにします。</p>
+      <div style="background:#fff;border:1px solid #99f6e4;border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.7;">
+        <b style="color:#0f766e;">併記に修正する対象：</b>Day25 再診案内／Day35 最終リマインド／Day60 掘り起こし①<br>
+        <b style="color:#0f766e;">変更なし（全員共通）：</b>Day0 発送 ・ +2日 配送確認 ・ +7日 Tips ・ +14日 体調 ・ +20日 効果ヒアリング（服用の立ち上がりフォローのため、購入月数に関わらず共通）
       </div>
-
-      <p style="margin-bottom:8px;"><b>実装メモ：</b>Day0（発送）で購入月数を判定し、タグ「単月購入」／「複数月購入（Nヶ月）」を付与。あわせて<b>「お薬終了予定日」＝発送日＋（月数×30日）</b>を自動セットし、残量・再診系（Day25以降）の配信起点に使用します。共通トラックはこれまで通り発送日基準のままで問題ありません。</p>
-      <p style="font-size:12px;color:#0f766e;margin:0;"><b>補足（任意）：</b>複数月購入の方は服用期間が長く連絡が空きやすいため、中だるみ防止に月1回程度の軽い経過フォロー（体調・停滞期の声かけ）を挟むと離脱防止に有効です。</p>
     </div>
   </div>
 
@@ -580,11 +570,6 @@ https://drive.google.com/file/d/1Y4lSMlti-ICrs2vS8JMsZr6VIamM8Q7T/view?usp=drive
         <div class="auto-reply" style="margin-top:12px; border-left-color: #3b82f6;">
           <div class="auto-reply-label">設計意図</div>
           初日は発送連絡のみでシンプルに。ボタン分岐を廃止し、+2日に配送確認とアンケートを統合することでフローを簡潔にする。
-        </div>
-
-        <div class="auto-reply" style="margin-top:10px; border-left-color: #0d9488;">
-          <div class="auto-reply-label">購入月数の判定（2026-07-28 追加）</div>
-          発送時に購入月数を判定し、タグ「単月購入」／「複数月購入（Nヶ月）」を付与。あわせて「お薬終了予定日＝発送日＋（月数×30日）」をセットし、+25日以降の残量・再診系メッセージの配信起点として使用します。※発送連絡の文面自体は共通です。
         </div>
 
         <div class="feedback-area" data-step="day0">
@@ -1083,26 +1068,11 @@ Q. 次回の診察ではどんなことを相談できる？
         <span class="card-title">再診のご案内</span>
       </div>
       <div class="card-body">
-        <div class="card-trigger">トリガー：お薬終了予定日の約1週間前（<b>単月購入＝発送+25日</b>／<b>複数月購入＝発送+（月数×30日）−7日</b>）｜お薬の残量が少なくなるタイミング｜条件：タグ「再診_予約タップ」「再診_LINE希望」がない人のみ配信 <span style="color:#a855f7;font-weight:700;">（追記2026-07-23：Day20で継続予約済みは除外）</span></div>
+        <div class="card-trigger">トリガー：発送日から25日後｜お薬の残量が少なくなるタイミング｜条件：タグ「再診_予約タップ」「再診_LINE希望」がない人のみ配信 <span style="color:#a855f7;font-weight:700;">（追記2026-07-23：Day20で継続予約済みは除外）</span></div>
 
         <div style="background:#f0fdfa;border:1px solid #99f6e4;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;line-height:1.7;color:#0f766e;">
-          <b>単月購入の方：</b>発送から約25日で薬が切れるころ。下記パターンA〜Cの再診案内をそのまま配信します。<br>
-          <b>複数月分まとめてご購入の方：</b>まだ薬が残っているため、この時点では再診を促しません。まず下記の「経過フォロー」を配信し、<b>再診案内（パターンA〜C）はお薬終了予定日の約1週間前に同じ文面でお送り</b>します。
+          <b>単月／複数月まとめ購入の併記（2026-07-28）：</b>送り分けはせず、下記メッセージ内に「単月分をご購入の方は〜／複数月分をまとめてご購入の方は〜」を併記。単月の方は再診を、複数月の方は「まだ薬がある前提」で残量が減ったころの予約を案内します。
         </div>
-
-        <div class="msg-preview" style="border:1px dashed #14b8a6;background:#ecfeff;margin-bottom:16px;">
-          <div class="auto-reply-label" style="margin-bottom:6px;color:#0f766e;">複数月分まとめてご購入の方向け ｜ 経過フォロー（発送+25日ごろ）</div>
-          <div class="msg-bubble" style="font-size:12px;">こんにちは、Biyokuruです。
-服用を始めて約3週間ですね。
-
-まとめてご購入いただいているので、お薬はまだ十分にお手元にあるかと思います。
-焦らず、今のペースで続けていただければ大丈夫です。
-
-お薬が少なくなるころに、改めて再診のご案内をお送りしますね。
-気になることがあれば、いつでもこのLINEにご相談ください。</div>
-        </div>
-
-        <div style="font-size:12px;font-weight:600;color:#166534;margin:0 0 8px;">▼ 再診案内（単月購入＝いま配信／複数月購入＝お薬終了予定日の約1週間前に配信）</div>
 
         <div class="segment-columns">
           <!-- パターンA -->
@@ -1112,9 +1082,9 @@ Q. 次回の診察ではどんなことを相談できる？
               <div class="msg-bubble" style="font-size:12px;">こんにちは、Biyokuruです。
 効果を感じていただけているとのこと、よかったです。
 
-そろそろお薬の残りが少なくなるころかと思います。
+単月分をご購入の方は、そろそろお薬が少なくなるころかと思います。継続をご希望の場合は、お薬が切れる前に再診のご予約をお願いいたします。
 
-継続をご希望の場合は、再診のご予約をお願いいたします。</div>
+複数月分をまとめてご購入の方は、お薬はまだお手元に残っているかと思います。今のペースで続けていただき、残りが少なくなってきたタイミングで再診をご予約ください。</div>
               <div class="msg-bubble" style="font-size:12px;">
                 <div class="msg-btns">
                   <div class="msg-btn">再診を予約する</div>
@@ -1155,8 +1125,9 @@ Q. 次回の診察ではどんなことを相談できる？
               <div class="msg-bubble" style="font-size:12px;">こんにちは、Biyokuruです。
 その後、お薬の調子はいかがでしょうか。
 
-お薬の残りが少なくなっているかと思います。
-継続をご希望の場合は、こちらからご予約いただけます。</div>
+単月分をご購入の方は、そろそろお薬が少なくなるころかと思います。継続をご希望の場合は、こちらからご予約いただけます。
+
+複数月分をまとめてご購入の方は、お薬はまだお手元にあるかと思いますので、残りが少なくなってきたタイミングでご予約ください。</div>
               <div class="msg-bubble" style="font-size:12px;">
                 <div class="msg-btns">
                   <div class="msg-btn">再診を予約する</div>
@@ -1218,18 +1189,16 @@ Q. 次回の診察ではどんなことを相談できる？
         <span class="badge" style="background:#f1f5f9;color:#64748b;">最終配信</span>
       </div>
       <div class="card-body">
-        <div class="card-trigger">トリガー：お薬終了予定日ごろ（<b>単月購入＝発送+35日</b>／<b>複数月購入＝終了予定日+約5日</b>）｜条件：タグ「再診_予約タップ」「再診_LINE希望」がない人のみ</div>
-
-        <div style="background:#f0fdfa;border:1px solid #99f6e4;border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:12px;line-height:1.6;color:#0f766e;">
-          文面は<b>単月・複数月とも共通</b>。複数月購入の方には、この最終リマインドを<b>お薬終了予定日ごろ（＝実際に薬が切れるタイミング）</b>に後ろ倒しで配信します。
-        </div>
+        <div class="card-trigger">トリガー：発送日から35日後｜条件：タグ「再診_予約タップ」「再診_LINE希望」がない人のみ</div>
 
         <div class="msg-preview">
           <div class="msg-bubble">こんにちは、Biyokuruです。
+その後、体調はいかがですか。
 
-お薬がなくなるころかと思いますが、体調はいかがですか。
+単月分をご購入の方は、そろそろお薬がなくなるころかと思います。再診をご希望の場合は、こちらからご予約いただけます。
 
-再診をご希望の場合は、こちらからご予約いただけます。
+複数月分をまとめてご購入の方も、残りが少なくなってきましたら、早めのご予約が安心です。
+
 何かご不明な点があれば、お気軽にお問い合わせください。</div>
           <div class="msg-bubble">
             <div class="msg-btns">
@@ -1306,12 +1275,15 @@ Q. 次回の診察ではどんなことを相談できる？
         <span class="card-title">掘り起こし配信①</span>
       </div>
       <div class="card-body">
-        <div class="card-trigger">トリガー：お薬終了予定日+約25日（<b>単月購入＝発送+60日</b>／<b>複数月購入＝終了予定日+25日</b>）｜条件：タグ「シナリオ_完了_未再診」がある人のみ</div>
+        <div class="card-trigger">トリガー：発送日から60日後｜条件：タグ「シナリオ_完了_未再診」がある人のみ</div>
 
         <div class="msg-preview">
           <div class="msg-bubble">こんにちは、Biyokuruです。
 
-お薬の注文忘れはございませんでしょうか？
+お薬はお手元に足りていますでしょうか？
+
+単月分をご購入の方は、お薬が切れてしばらく経つころかと思います。注文忘れがないか、一度ご確認ください。
+複数月分をまとめてご購入の方も、残りが少なくなってきていましたら、早めのご準備が安心です。
 
 治療は継続することで効果が安定してきます。途中でやめてしまうと、せっかくの変化が元に戻ってしまうこともあります。
 
@@ -1391,7 +1363,7 @@ Q. 次回の診察ではどんなことを相談できる？
         <span class="card-title">掘り起こし配信②</span>
       </div>
       <div class="card-body">
-        <div class="card-trigger">トリガー：掘り起こし①（+60日相当）から約60日後｜条件：前ステップで未反応の人のみ</div>
+        <div class="card-trigger">トリガー：発送日から120日後｜条件：+60日で未反応の人のみ</div>
 
         <div class="msg-preview">
           <div class="msg-bubble">こんにちは、Biyokuruです。
@@ -1468,7 +1440,7 @@ Q. 次回の診察ではどんなことを相談できる？
         <span class="card-title">最終掘り起こし + 休眠タグ付与</span>
       </div>
       <div class="card-body">
-        <div class="card-trigger">トリガー：掘り起こし②から約60日後（約6ヶ月経過の目安）｜条件：前ステップで未反応の人のみ｜タグ操作：自動で「休眠」タグを付与</div>
+        <div class="card-trigger">トリガー：発送日から180日後｜条件：+120日で未反応の人のみ｜タグ操作：自動で「休眠」タグを付与</div>
 
         <div class="msg-preview">
           <div class="msg-bubble">こんにちは、Biyokuruです。
