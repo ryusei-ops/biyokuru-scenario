@@ -8,8 +8,8 @@
     1通の中に「単月分をご購入の方は〜／複数月分をまとめてご購入の方は〜」を併記する方式に変更。
   - 対象: Day25 再診案内（パターンA/C）・Day35 最終リマインド・Day60 掘り起こし①。
   - 立ち上がりフォロー（Day0/2/7/14/20）は全員共通のため変更なし。
-  - +45日「経過フォロー（軽め）」を新設。Day35→Day60 の空きを埋め、薬が残る複数月購入者の離脱を防ぐ
-    様子うかがいの一通（売り込みなし）。Day35 未タップ → +45日 → 未反応なら +60日 掘り起こしへ。
+  - +45日「体調フォロー（様子うかがい）」を新設。再診・残量・購入には一切触れず「体調大丈夫ですか？」と
+    気づかうだけの一通。薬が残る複数月購入者にも自然に届き離脱を防ぐ。Day35 未タップ → +45日 → 未反応なら +60日。
   ※ 本文中は緑色（teal）のブロックで明示。
 
   [2026-07-23] 追記（相関分析ふまえた改善案）
@@ -498,7 +498,7 @@
   <a href="#step-day20" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>+20日 ヒアリング</a>
   <a href="#step-day25" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>+25日 再診</a>
   <a href="#step-day35" class="nav-btn"><div class="nav-dot" style="background:#94a3b8"></div>+35日 最終</a>
-  <a href="#step-day45" class="nav-btn"><div class="nav-dot" style="background:#0d9488"></div>+45日 経過フォロー</a>
+  <a href="#step-day45" class="nav-btn"><div class="nav-dot" style="background:#0d9488"></div>+45日 体調フォロー</a>
   <a href="#step-day60" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>+60日 掘り起こし</a>
   <a href="#step-day120" class="nav-btn"><div class="nav-dot" style="background:#3b82f6"></div>+120日 掘り起こし</a>
   <a href="#step-day180" class="nav-btn"><div class="nav-dot" style="background:#94a3b8"></div>+180日 休眠</a>
@@ -1247,7 +1247,7 @@ Q. 次回の診察ではどんなことを相談できる？
 
         <div class="auto-reply" style="margin-top:12px; border-left-color: #f59e0b;">
           <div class="auto-reply-label">設計意図</div>
-          医療サービスとして、過度な追客は信頼を損なう。再診は患者の意思で決めるもの。未タップの場合はまず +45日 の軽い経過フォローへ、それでも反応がなければタグ「シナリオ_完了_未再診」を付与し +60日/+120日/+180日の掘り起こしフローへ移行。
+          医療サービスとして、過度な追客は信頼を損なう。再診は患者の意思で決めるもの。未タップの場合はまず +45日 の体調フォロー（体調気づかいのみ・売り込みなし）へ、それでも反応がなければタグ「シナリオ_完了_未再診」を付与し +60日/+120日/+180日の掘り起こしフローへ移行。
         </div>
         <div class="feedback-area" data-step="day35">
           <div class="feedback-toggle" onclick="toggleFeedback(this)">
@@ -1273,29 +1273,35 @@ Q. 次回の診察ではどんなことを相談できる？
     <div class="card" style="border-left:4px solid #0d9488;">
       <div class="card-header">
         <span class="card-day">+45日</span>
-        <span class="card-title">経過フォロー（軽め）</span>
+        <span class="card-title">体調フォロー（様子うかがい）</span>
         <span class="badge" style="background:#ccfbf1;color:#0f766e;">2026-07-28 追加</span>
       </div>
       <div class="card-body">
         <div class="card-trigger">トリガー：発送日から45日後｜条件：タグ「再診_予約タップ」「再診_LINE希望」がない人のみ</div>
 
         <div style="background:#f0fdfa;border:1px solid #99f6e4;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;line-height:1.7;color:#0f766e;">
-          再診をまだ予約していない方への<b>売り込みではない「様子うかがい」の一通</b>。特に複数月まとめ購入の方は薬が残っていて連絡が空きやすいため、関係を切らさず離脱を防ぐのが狙い。単月・複数月の両方を併記。
+          <b>再診・購入の話は一切しない、体調を気づかうだけの一通。</b>「体調大丈夫ですか？」と声をかけ、相談の間口だけを開ける。売り込みトーンをゼロにすることで、薬が残っている複数月購入の方にも自然に届き、関係を切らさない。単月・複数月の区別なし（残量の話をしないため）。
         </div>
 
         <div class="msg-preview">
-          <div class="msg-bubble">こんにちは、Biyokuruです。
-その後、体調やお薬の調子はいかがですか。
+          <div class="msg-bubble">[name]様
 
-単月分をご購入の方は、お薬を使い切ったあと、体調で気になる点はございませんか。
-複数月分をまとめてご購入の方は、続けていて飲みにくさや気になることはございませんか。
+こんにちは、Biyokuruです。
+その後、体調はいかがですか？
+お変わりなくお過ごしでしょうか。
 
-小さなことでも、このLINEからお気軽にご相談いただけます。
-無理のないペースで、一緒に続けていきましょう。</div>
+治療を続けていくなかで、
+・気になる体調の変化
+・お薬の飲み方で迷うこと
+・ちょっとした不安
+
+など、どんな小さなことでもかまいません。
+このLINEから、いつでもお気軽にお声がけくださいね。
+
+[name]様が無理なく続けられるよう、サポートしております。</div>
           <div class="msg-bubble">
             <div class="msg-btns">
-              <div class="msg-btn sec">LINEで相談する</div>
-              <div class="msg-btn">再診を予約する</div>
+              <div class="msg-btn sec">気になることを相談する</div>
             </div>
           </div>
         </div>
@@ -1306,21 +1312,14 @@ Q. 次回の診察ではどんなことを相談できる？
             <div class="bt-row">
               <div class="bt-connector"></div>
               <div class="bt-node bg-yellow">
-                「LINEで相談する」
-                <span class="bt-result">→ 自動返信（下記）</span>
-              </div>
-            </div>
-            <div class="bt-row">
-              <div class="bt-connector"></div>
-              <div class="bt-node bg-green">
-                「再診を予約する」
-                <span class="bt-result"><span class="end-node end-green">再診完了</span> → <a href="#step-day0" class="jump-link">Day 0へループ</a></span>
+                「気になることを相談する」／返信あり
+                <span class="bt-result">→ 自動返信（下記）→ 内容に応じてスタッフ対応</span>
               </div>
             </div>
             <div class="bt-row">
               <div class="bt-connector"></div>
               <div class="bt-node bg-gray">
-                未タップ
+                反応なし
                 <span class="bt-result"><a href="#step-day60" class="jump-link">→ +60日 掘り起こしへ</a></span>
               </div>
             </div>
@@ -1328,13 +1327,13 @@ Q. 次回の診察ではどんなことを相談できる？
         </div>
 
         <div class="auto-reply" style="margin-top:10px;">
-          <div class="auto-reply-label">「LINEで相談する」の自動返信：</div>
-          ありがとうございます。ご質問やご相談がございましたら、このLINEにそのままメッセージをお送りください。スタッフが確認し、ご回答いたします。
+          <div class="auto-reply-label">「気になることを相談する」／返信への自動返信：</div>
+          お声がけいただきありがとうございます。気になることを、このLINEにそのままメッセージでお送りください。スタッフが確認し、ご回答いたします。
         </div>
 
         <div class="auto-reply" style="margin-top:12px; border-left-color:#0d9488;">
           <div class="auto-reply-label">設計意図</div>
-          Day35（最終リマインド）と Day60（掘り起こし）の間が空くため、その中間に軽い接点を1つ追加。再診の催促トーンを避け、体調をうかがう・相談の間口を開けることに徹する。複数月まとめ購入の方の「薬はまだあるが連絡が途切れる」状態をカバーする。
+          再診・残量・購入には一切触れず、<b>体調を気づかうことだけに徹した純粋なフォロー</b>。Day35（最終リマインド）と Day60（掘り起こし）の間に、売り込みでない接点を1つ挟むことで信頼を積む。特に薬が残っている複数月まとめ購入の方に「ちゃんと見てくれている」安心感を与え、離脱を防ぐ。
         </div>
 
         <div class="feedback-area" data-step="day45">
@@ -1343,7 +1342,7 @@ Q. 次回の診察ではどんなことを相談できる？
             <span class="fb-count"></span>
           </div>
           <div class="feedback-body">
-            <textarea class="feedback-textarea" data-key="fb-day45" placeholder="+45日 経過フォロー へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <textarea class="feedback-textarea" data-key="fb-day45" placeholder="+45日 体調フォロー へのコメント..." oninput="saveFeedback(this)"></textarea>
             <div class="feedback-status"></div>
           </div>
         </div>
