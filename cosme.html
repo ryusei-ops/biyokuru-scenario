@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<!--
+  === ドクターズコスメ・サプリ用シナリオ（ドラフト） ===
+  [2026-08-03] 初稿
+  - 発送後 +7日／+30日／+60日 の3通構成（処方薬シナリオより軽め）
+  - 目的: 商品が合っているか・使用状況の確認がメイン
+  - フォローが必要な方 → LINE相談へ誘導
+  - 継続希望の方 → ECでの購入＋カウンセリング予約を案内
+-->
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biyokuru ドクターズコスメ・サプリ シナリオ（ドラフト）</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f5f7fa;
+    color: #1a1a2e;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #fff;
+    padding: 40px 20px 32px;
+    text-align: center;
+  }
+  .page-header h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .page-header p { font-size: 13px; color: #a0aec0; }
+  .draft-badge {
+    display: inline-block; margin-top: 10px;
+    font-size: 12px; font-weight: 700; color: #92400e;
+    background: #fef3c7; border: 1px solid #fde68a;
+    padding: 3px 14px; border-radius: 14px;
+  }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  .step { margin-bottom: 0; scroll-margin-top: 40px; }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04);
+    overflow: hidden;
+  }
+  .card-border-blue { border-left: 4px solid #3b82f6; }
+  .card-border-pink { border-left: 4px solid #ec4899; }
+  .card-border-gray { border-left: 4px solid #94a3b8; }
+
+  .card-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .card-day {
+    font-size: 12px; font-weight: 700; color: #fff;
+    background: #1a1a2e; padding: 3px 10px; border-radius: 6px; white-space: nowrap;
+  }
+  .card-title { font-size: 16px; font-weight: 600; flex: 1; }
+  .card-body { padding: 16px 20px 20px; }
+  .card-trigger { font-size: 11px; color: #94a3b8; margin-bottom: 10px; }
+
+  .msg-preview {
+    background: #e8edf3;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 10px 0;
+  }
+  .msg-bubble {
+    background: #fff;
+    border-radius: 0 12px 12px 12px;
+    padding: 12px 14px;
+    max-width: 90%;
+    font-size: 13px;
+    line-height: 1.7;
+    white-space: pre-line;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .msg-bubble:last-child { margin-bottom: 0; }
+  .msg-btns { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+  .msg-btn {
+    display: block; text-align: center; padding: 8px;
+    border-radius: 6px; font-size: 13px; font-weight: 600;
+    color: #fff; background: #22c55e;
+  }
+  .msg-btn.blue { background: #3b82f6; }
+  .msg-btn.pink { background: #ec4899; }
+  .msg-btn.sec { background: #fff; color: #22c55e; border: 2px solid #22c55e; }
+  .msg-btn.gray { background: #94a3b8; }
+
+  .branch-section { margin-top: 12px; }
+  .branch-label {
+    font-size: 11px; font-weight: 600; color: #64748b;
+    text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px;
+  }
+  .branch-grid { display: grid; gap: 8px; }
+  .branch-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .branch-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .branch-item { border-radius: 8px; padding: 10px 12px; font-size: 12px; font-weight: 500; }
+  .branch-item .result { font-size: 11px; font-weight: 600; margin-top: 4px; padding-top: 4px; border-top: 1px solid rgba(0,0,0,.08); display: block; }
+  .bg-green  { background: #dcfce7; color: #166534; }
+  .bg-yellow { background: #fef9c3; color: #854d0e; }
+  .bg-orange { background: #ffedd5; color: #9a3412; }
+  .bg-gray   { background: #f1f5f9; color: #475569; }
+  .bg-blue   { background: #dbeafe; color: #1e40af; }
+  .bg-pink   { background: #fce7f3; color: #9d174d; }
+
+  .auto-reply {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border-left: 3px solid #cbd5e1;
+    border-radius: 0 8px 8px 0;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #475569;
+  }
+  .auto-reply-label { font-size: 11px; font-weight: 600; color: #94a3b8; margin-bottom: 4px; }
+
+  .flow-arrow { display: flex; flex-direction: column; align-items: center; padding: 8px 0; }
+  .flow-arrow::before { content: ''; width: 2px; height: 24px; background: #94a3b8; }
+  .flow-arrow::after {
+    content: ''; width: 0; height: 0;
+    border-left: 6px solid transparent; border-right: 6px solid transparent;
+    border-top: 8px solid #94a3b8;
+  }
+
+  .overview {
+    margin-bottom: 24px; border: 2px solid #ec4899; border-radius: 12px;
+    background: #fdf2f8; overflow: hidden;
+  }
+  .overview-head { background: #ec4899; color: #fff; padding: 10px 16px; font-size: 13px; font-weight: 700; }
+  .overview-body { padding: 14px 16px 16px; font-size: 13px; line-height: 1.8; color: #334155; }
+
+  /* feedback */
+  .feedback-area { margin-top: 16px; border-top: 1px dashed #e2e8f0; padding-top: 12px; }
+  .feedback-toggle {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6366f1;
+    background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 6px;
+    padding: 5px 12px; cursor: pointer; user-select: none;
+  }
+  .feedback-toggle:hover { background: #e0e7ff; }
+  .feedback-toggle .fb-count {
+    background: #6366f1; color: #fff; font-size: 10px; padding: 0 6px;
+    border-radius: 10px; min-width: 18px; text-align: center; display: none;
+  }
+  .feedback-toggle .fb-count.has { display: inline-block; }
+  .feedback-body { display: none; margin-top: 10px; }
+  .feedback-body.open { display: block; }
+  .feedback-textarea {
+    width: 100%; min-height: 80px;
+    border: 1px solid #c7d2fe; border-radius: 8px; padding: 10px 12px;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 13px; line-height: 1.6;
+    color: #1a1a2e; background: #fafaff; resize: vertical; outline: none;
+  }
+  .feedback-textarea:focus { border-color: #6366f1; background: #fff; }
+  .feedback-status { font-size: 11px; color: #94a3b8; margin-top: 4px; min-height: 16px; }
+  .feedback-status.saved { color: #22c55e; }
+  .export-bar {
+    display: flex; justify-content: center; gap: 8px;
+    padding: 12px 20px; background: #fff; border-bottom: 1px solid #e2e8f0;
+  }
+  .export-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6366f1;
+    background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 6px;
+    padding: 6px 14px; cursor: pointer;
+  }
+  .export-btn:hover { background: #e0e7ff; }
+  .export-btn.danger { color: #ef4444; background: #fef2f2; border-color: #fecaca; }
+
+  @media (max-width: 700px) {
+    .branch-grid.cols-2, .branch-grid.cols-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>ドクターズコスメ・サプリ シナリオ</h1>
+  <p>発送後 +7日／+30日／+60日 のフォロー配信</p>
+  <span class="draft-badge">ドラフト（初稿）2026-08-03</span>
+</div>
+
+<div style="max-width:720px;margin:16px auto 0;padding:16px 20px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;font-size:13px;line-height:1.8;color:#475569;">
+  <div style="font-weight:700;color:#1a1a2e;margin-bottom:6px;font-size:14px;">フィードバックの残し方</div>
+  <div>各ステップの「memo フィードバック」からコメントをご記入いただき、最後に下の「フィードバックをコピー」を押してテキストを大石までご共有ください。</div>
+</div>
+
+<div class="export-bar">
+  <button class="export-btn" onclick="exportFeedback()">フィードバックをコピー</button>
+  <button class="export-btn danger" onclick="clearAllFeedback()">全コメントをクリア</button>
+</div>
+
+<div class="container">
+
+  <!-- 概要 -->
+  <div class="overview">
+    <div class="overview-head">シナリオの考え方</div>
+    <div class="overview-body">
+      <p style="margin-bottom:8px;">処方薬シナリオより軽めの<b>3通構成（+7日／+30日／+60日）</b>。診察を挟まないため、目的は次の3つに絞ります。</p>
+      <p style="margin-bottom:4px;">1. <b>商品が合っているか・使用状況の確認</b>（各回のメイン）</p>
+      <p style="margin-bottom:4px;">2. フォローが必要な方 → <b>LINE相談へ誘導</b>（肌に合わない・使い方が分からない等）</p>
+      <p style="margin-bottom:8px;">3. 継続希望の方 → <b>ECでの購入</b>＋<b>カウンセリング予約</b>を案内</p>
+      <p style="font-size:12px;color:#9d174d;">※ コスメ・サプリ共通で使える文言にしています。商品カテゴリごとに文言を分ける場合は調整可能です。<br>※ EC・カウンセリング予約のURLは実装時に差し込みます。</p>
+    </div>
+  </div>
+
+  <!-- Day 0 -->
+  <div class="step" id="step-day0">
+    <div class="card card-border-gray">
+      <div class="card-header">
+        <span class="card-day">Day 0</span>
+        <span class="card-title">発送連絡</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：配送ステータス変更時｜配信形式：テキストのみ</div>
+
+        <div class="msg-preview">
+          <div class="msg-bubble">【商品発送のお知らせ】
+いつもBiyokuruをご利用いただきありがとうございます。
+ご注文いただいた商品を発送いたしました。
+
+お届けまで1〜2日程度かかります。
+
+配送や商品に関するお問い合わせは、こちらのLINEよりご連絡ください。
+
+Biyokuru</div>
+        </div>
+
+        <div class="auto-reply" style="border-left-color:#94a3b8;">
+          <div class="auto-reply-label">補足</div>
+          処方薬シナリオのDay 0と同じ位置づけ。文面は商品向けに簡略化。
+        </div>
+
+        <div class="feedback-area" data-step="day0">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span>memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-cosme-day0" placeholder="Day 0 へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"></div>
+
+  <!-- +7日 -->
+  <div class="step" id="step-day7">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">+7日</span>
+        <span class="card-title">使用状況・相性の確認</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：発送日から7日後｜配信形式：テキスト＋ボタン3つ</div>
+
+        <div class="msg-preview">
+          <div class="msg-bubble">こんにちは、Biyokuruです。
+商品はお手元に届きましたでしょうか？
+
+お使いはじめの時期ですので、ご様子をお聞かせください。
+ご使用感はいかがですか？</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">問題なく使えています</div>
+              <div class="msg-btn gray">まだ使い始めていません</div>
+              <div class="msg-btn sec">気になることがある</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="branch-section">
+          <div class="branch-label">分岐</div>
+          <div class="branch-grid cols-3">
+            <div class="branch-item bg-green">
+              「問題なく使えています」
+              <span class="result">→ 自動返信のみ。+30日へ</span>
+            </div>
+            <div class="branch-item bg-gray">
+              「まだ使い始めていません」
+              <span class="result">→ 自動返信のみ。+30日へ</span>
+            </div>
+            <div class="branch-item bg-orange">
+              「気になることがある」
+              <span class="result">→ LINE相談へ誘導（スタッフ対応）</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="auto-reply" style="margin-top:10px;">
+          <div class="auto-reply-label">「問題なく使えています」の自動返信：</div>
+          ご回答ありがとうございます。安心しました。
+続けていくなかで気になることがあれば、いつでもこのLINEにご相談ください。
+        </div>
+        <div class="auto-reply">
+          <div class="auto-reply-label">「まだ使い始めていません」の自動返信：</div>
+          ご回答ありがとうございます。
+お手元に届いていない場合や、使い方にご不明な点がある場合は、このLINEにご連絡ください。
+        </div>
+        <div class="auto-reply">
+          <div class="auto-reply-label">「気になることがある」の自動返信：</div>
+          ご回答ありがとうございます。
+お肌に合わない・使い方が分からないなど、気になる内容をこのLINEにそのままお送りください。スタッフが確認し、ご案内いたします。
+        </div>
+
+        <div class="feedback-area" data-step="day7">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span>memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-cosme-day7" placeholder="+7日 へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"></div>
+
+  <!-- +30日 -->
+  <div class="step" id="step-day30">
+    <div class="card card-border-pink">
+      <div class="card-header">
+        <span class="card-day">+30日</span>
+        <span class="card-title">状況確認＋継続のご案内</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：発送日から30日後｜配信形式：テキスト＋ボタン3つ</div>
+
+        <div class="msg-preview">
+          <div class="msg-bubble">こんにちは、Biyokuruです。
+ご使用から1ヶ月ほどになりますね。
+その後、ご使用感やお肌・お体の調子はいかがですか？
+
+そろそろ残りが少なくなってくるころかと思います。
+継続をご希望の場合は、ECサイトからご購入いただけます。
+
+「自分に合っているか分からない」「アイテム選びに迷っている」という方は、カウンセリングもご利用いただけます。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn pink">ECサイトで購入する</div>
+              <div class="msg-btn blue">カウンセリングを予約する</div>
+              <div class="msg-btn sec">LINEで相談する</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="branch-section">
+          <div class="branch-label">分岐</div>
+          <div class="branch-grid cols-3">
+            <div class="branch-item bg-pink">
+              「ECサイトで購入する」
+              <span class="result">→ ECへ遷移。購入で次回発送時にDay 0へループ</span>
+            </div>
+            <div class="branch-item bg-blue">
+              「カウンセリングを予約する」
+              <span class="result">→ 予約ページへ遷移</span>
+            </div>
+            <div class="branch-item bg-gray">
+              未タップ／LINE相談
+              <span class="result">→ +60日へ／スタッフ対応</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="auto-reply" style="margin-top:10px;">
+          <div class="auto-reply-label">「LINEで相談する」の自動返信：</div>
+          ありがとうございます。ご使用感やアイテム選びなど、気になることをこのLINEにそのままお送りください。スタッフが確認し、ご案内いたします。
+        </div>
+
+        <div class="auto-reply" style="margin-top:12px; border-left-color:#ec4899;">
+          <div class="auto-reply-label">設計意図</div>
+          使い切りの少し前に「状況確認 → 継続案内」を1通で完結。迷っている層はカウンセリングで受け止め、EC直行と2つの導線を用意する。
+        </div>
+
+        <div class="feedback-area" data-step="day30">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span>memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-cosme-day30" placeholder="+30日 へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"></div>
+
+  <!-- +60日 -->
+  <div class="step" id="step-day60">
+    <div class="card card-border-pink">
+      <div class="card-header">
+        <span class="card-day">+60日</span>
+        <span class="card-title">掘り起こし（最終）</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：発送日から60日後｜条件：+30日以降に再購入がない方のみ</div>
+
+        <div class="msg-preview">
+          <div class="msg-bubble">こんにちは、Biyokuruです。
+その後、お肌やお体の調子はいかがですか？
+
+スキンケアやインナーケアは、続けることで少しずつ変化が安定してきます。
+お手元の商品を使い切られていましたら、買い忘れがないか一度ご確認ください。
+
+「もう少し自分に合うものを探したい」という方は、カウンセリングでご相談いただけます。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn pink">ECサイトで購入する</div>
+              <div class="msg-btn blue">カウンセリングを予約する</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="branch-section">
+          <div class="branch-label">分岐（これが最後）</div>
+          <div class="branch-grid cols-3">
+            <div class="branch-item bg-pink">
+              「ECサイトで購入する」
+              <span class="result">→ 購入で次回発送時にDay 0へループ</span>
+            </div>
+            <div class="branch-item bg-blue">
+              「カウンセリングを予約する」
+              <span class="result">→ 予約ページへ遷移</span>
+            </div>
+            <div class="branch-item bg-gray">
+              未タップ
+              <span class="result">→ シナリオ終了（一斉配信・キャンペーン対象として管理）</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="auto-reply" style="margin-top:12px; border-left-color:#94a3b8;">
+          <div class="auto-reply-label">設計意図</div>
+          使い切りから約1ヶ月後の掘り起こし。処方薬と違い追いすぎない設計とし、60日で未反応ならシナリオ終了。以降は新商品・キャンペーンの一斉配信でアプローチ。
+        </div>
+
+        <div class="feedback-area" data-step="day60">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span>memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-cosme-day60" placeholder="+60日 へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let saveTimer = null;
+function toggleFeedback(btn) {
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+  if (body.classList.contains('open')) body.querySelector('textarea').focus();
+}
+function saveFeedback(textarea) {
+  const key = textarea.dataset.key;
+  const status = textarea.nextElementSibling;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    localStorage.setItem(key, textarea.value);
+    status.textContent = '保存しました';
+    status.className = 'feedback-status saved';
+    setTimeout(() => { status.textContent = ''; status.className = 'feedback-status'; }, 2000);
+    updateBadge(textarea);
+  }, 500);
+}
+function updateBadge(textarea) {
+  const badge = textarea.closest('.feedback-area').querySelector('.fb-count');
+  const val = textarea.value.trim();
+  if (val) {
+    badge.textContent = val.split('\n').filter(l => l.trim()).length;
+    badge.classList.add('has');
+  } else {
+    badge.classList.remove('has');
+  }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.feedback-textarea').forEach(ta => {
+    const saved = localStorage.getItem(ta.dataset.key);
+    if (saved) {
+      ta.value = saved;
+      updateBadge(ta);
+      ta.closest('.feedback-body').classList.add('open');
+    }
+  });
+});
+function exportFeedback() {
+  const lines = [];
+  document.querySelectorAll('.feedback-textarea').forEach(ta => {
+    const val = ta.value.trim();
+    if (val) lines.push(`【${ta.dataset.key.replace('fb-cosme-', '').replace('day', 'Day ')}】\n${val}`);
+  });
+  if (!lines.length) { alert('まだフィードバックが入力されていません'); return; }
+  const text = '=== ドクターズコスメ・サプリ シナリオ フィードバック ===\n\n' + lines.join('\n\n---\n\n');
+  navigator.clipboard.writeText(text).then(() => {
+    alert('フィードバックをコピーしました（' + lines.length + '件）');
+  });
+}
+function clearAllFeedback() {
+  if (!confirm('全てのフィードバックを削除しますか？')) return;
+  document.querySelectorAll('.feedback-textarea').forEach(ta => {
+    ta.value = '';
+    localStorage.removeItem(ta.dataset.key);
+    updateBadge(ta);
+    ta.closest('.feedback-body').classList.remove('open');
+  });
+}
+</script>
+
+</body>
+</html>
