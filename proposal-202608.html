@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<!--
+  === 処方薬シナリオ 改修案（2026-08定例をふまえて） ===
+  [2026-08-08] 初稿
+  - 配信タイミングを 7日・21日・45日 の3通に整理（現行 7・14・21・30日）
+    → 30日前後の再診予約済みユーザーへの重複配信を解消・配信間隔を拡大
+  - +21日ヒアリングをシンプル化（順調か／体重／続けていけそうか）し、回答で分岐
+    → 目標達成層=弱めのお薬への切替提案／迷い層=インセンティブ／不調層=医師相談
+  - +21日・+45日は再診予約済みタグ（再診_予約タップ/再診_LINE希望）を配信除外
+-->
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biyokuru 処方薬シナリオ 改修案（2026-08）</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f5f7fa;
+    color: #1a1a2e;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #fff;
+    padding: 40px 20px 32px;
+    text-align: center;
+  }
+  .page-header h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .page-header p { font-size: 13px; color: #a0aec0; }
+  .draft-badge {
+    display: inline-block; margin-top: 10px;
+    font-size: 12px; font-weight: 700; color: #92400e;
+    background: #fef3c7; border: 1px solid #fde68a;
+    padding: 3px 14px; border-radius: 14px;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+  .step { margin-bottom: 0; scroll-margin-top: 40px; }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04);
+    overflow: hidden;
+  }
+  .card-border-blue { border-left: 4px solid #3b82f6; }
+  .card-border-teal { border-left: 4px solid #0d9488; }
+  .card-border-gray { border-left: 4px solid #94a3b8; }
+  .card-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .card-day {
+    font-size: 12px; font-weight: 700; color: #fff;
+    background: #1a1a2e; padding: 3px 10px; border-radius: 6px; white-space: nowrap;
+  }
+  .card-title { font-size: 16px; font-weight: 600; flex: 1; }
+  .badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+  .card-body { padding: 16px 20px 20px; }
+  .card-trigger { font-size: 11px; color: #94a3b8; margin-bottom: 10px; }
+  .msg-preview {
+    background: #e8edf3;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 10px 0;
+  }
+  .msg-bubble {
+    background: #fff;
+    border-radius: 0 12px 12px 12px;
+    padding: 12px 14px;
+    max-width: 90%;
+    font-size: 13px;
+    line-height: 1.7;
+    white-space: pre-line;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .msg-bubble:last-child { margin-bottom: 0; }
+  .msg-btns { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+  .msg-btn {
+    display: block; text-align: center; padding: 8px;
+    border-radius: 6px; font-size: 13px; font-weight: 600;
+    color: #fff; background: #22c55e;
+  }
+  .msg-btn.blue { background: #3b82f6; }
+  .msg-btn.warn { background: #f59e0b; }
+  .msg-btn.sec { background: #fff; color: #22c55e; border: 2px solid #22c55e; }
+  .msg-btn.gray { background: #94a3b8; }
+  .branch-section { margin-top: 12px; }
+  .branch-label {
+    font-size: 11px; font-weight: 600; color: #64748b;
+    text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px;
+  }
+  .branch-grid { display: grid; gap: 8px; }
+  .branch-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .branch-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .branch-item { border-radius: 8px; padding: 10px 12px; font-size: 12px; font-weight: 500; }
+  .branch-item .result { font-size: 11px; font-weight: 600; margin-top: 4px; padding-top: 4px; border-top: 1px solid rgba(0,0,0,.08); display: block; }
+  .bg-green  { background: #dcfce7; color: #166534; }
+  .bg-yellow { background: #fef9c3; color: #854d0e; }
+  .bg-orange { background: #ffedd5; color: #9a3412; }
+  .bg-gray   { background: #f1f5f9; color: #475569; }
+  .bg-blue   { background: #dbeafe; color: #1e40af; }
+  .auto-reply {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border-left: 3px solid #cbd5e1;
+    border-radius: 0 8px 8px 0;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #475569;
+  }
+  .auto-reply-label { font-size: 11px; font-weight: 600; color: #94a3b8; margin-bottom: 4px; }
+  .flow-arrow { display: flex; flex-direction: column; align-items: center; padding: 8px 0; }
+  .flow-arrow::before { content: ''; width: 2px; height: 24px; background: #94a3b8; }
+  .flow-arrow::after {
+    content: ''; width: 0; height: 0;
+    border-left: 6px solid transparent; border-right: 6px solid transparent;
+    border-top: 8px solid #94a3b8;
+  }
+  .overview {
+    margin-bottom: 24px; border: 2px solid #0d9488; border-radius: 12px;
+    background: #f0fdfa; overflow: hidden;
+  }
+  .overview-head { background: #0d9488; color: #fff; padding: 10px 16px; font-size: 13px; font-weight: 700; }
+  .overview-body { padding: 14px 16px 16px; font-size: 13px; line-height: 1.8; color: #334155; }
+  .timing-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 12px; }
+  .timing-table th, .timing-table td { border: 1px solid #99f6e4; padding: 8px 10px; text-align: left; vertical-align: top; }
+  .timing-table th { background: #ccfbf1; color: #0f766e; font-weight: 700; white-space: nowrap; }
+  .timing-table td { background: #fff; }
+  .note-box {
+    margin-top: 12px; background: #fffbeb; border: 1px solid #fde68a;
+    border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.7; color: #92400e;
+  }
+  /* feedback */
+  .feedback-area { margin-top: 16px; border-top: 1px dashed #e2e8f0; padding-top: 12px; }
+  .feedback-toggle {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6366f1;
+    background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 6px;
+    padding: 5px 12px; cursor: pointer; user-select: none;
+  }
+  .feedback-toggle:hover { background: #e0e7ff; }
+  .feedback-toggle .fb-count {
+    background: #6366f1; color: #fff; font-size: 10px; padding: 0 6px;
+    border-radius: 10px; min-width: 18px; text-align: center; display: none;
+  }
+  .feedback-toggle .fb-count.has { display: inline-block; }
+  .feedback-body { display: none; margin-top: 10px; }
+  .feedback-body.open { display: block; }
+  .feedback-textarea {
+    width: 100%; min-height: 80px;
+    border: 1px solid #c7d2fe; border-radius: 8px; padding: 10px 12px;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 13px; line-height: 1.6;
+    color: #1a1a2e; background: #fafaff; resize: vertical; outline: none;
+  }
+  .feedback-textarea:focus { border-color: #6366f1; background: #fff; }
+  .feedback-status { font-size: 11px; color: #94a3b8; margin-top: 4px; min-height: 16px; }
+  .feedback-status.saved { color: #22c55e; }
+  .export-bar {
+    display: flex; justify-content: center; gap: 8px;
+    padding: 12px 20px; background: #fff; border-bottom: 1px solid #e2e8f0;
+  }
+  .export-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6366f1;
+    background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 6px;
+    padding: 6px 14px; cursor: pointer;
+  }
+  .export-btn:hover { background: #e0e7ff; }
+  .export-btn.danger { color: #ef4444; background: #fef2f2; border-color: #fecaca; }
+  @media (max-width: 700px) {
+    .branch-grid.cols-2, .branch-grid.cols-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>処方薬シナリオ 改修案</h1>
+  <p>配信タイミングの整理（7日・21日・45日）とヒアリングのシンプル化</p>
+  <span class="draft-badge">ドラフト 2026-08-08 ｜ 8/7定例の内容を反映</span>
+</div>
+
+<div style="max-width:720px;margin:16px auto 0;padding:16px 20px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;font-size:13px;line-height:1.8;color:#475569;">
+  <div style="font-weight:700;color:#1a1a2e;margin-bottom:6px;font-size:14px;">フィードバックの残し方</div>
+  <div>各ステップの「memo フィードバック」からコメントをご記入いただき、最後に下の「フィードバックをコピー」を押してテキストを大石までご共有ください。</div>
+</div>
+
+<div class="export-bar">
+  <button class="export-btn" onclick="exportFeedback()">フィードバックをコピー</button>
+  <button class="export-btn danger" onclick="clearAllFeedback()">全コメントをクリア</button>
+</div>
+
+<div class="container">
+
+  <!-- 改修ポイント -->
+  <div class="overview">
+    <div class="overview-head">改修ポイント（8/7定例より）</div>
+    <div class="overview-body">
+      <p style="margin-bottom:6px;">1. <b>配信を発送後 7日・21日・45日 の3通に整理</b>（現行：7・14・21・30日）</p>
+      <p style="margin-bottom:6px;">2. <b>+21日・+45日は再診予約済みの方を配信除外</b>（タグ「再診_予約タップ」「再診_LINE希望」）→ 30日前後の再診予約済みの方への重複配信を解消</p>
+      <p style="margin-bottom:10px;">3. <b>ヒアリングをシンプル化</b>：「順調か・体重は落ちているか・続けていけそうか」を1回のボタン選択で確認し、回答に応じて提案を出し分け</p>
+
+      <table class="timing-table">
+        <tr><th>タイミング</th><th>役割</th><th>ねらい</th></tr>
+        <tr><td><b>+7日</b></td><td>到着確認＋立ち上がりフォロー</td><td>不安・不調の早期キャッチ → LINE相談へ</td></tr>
+        <tr><td><b>+21日</b></td><td>効果ヒアリング＋再診案内</td><td>単月購入の薬切れ約1週間前。回答別に切替提案・インセンティブ・医師相談を出し分け</td></tr>
+        <tr><td><b>+45日</b></td><td>掘り起こし＋体調フォロー</td><td>薬切れ後の再開促進。予約済みは届かない</td></tr>
+      </table>
+      <p style="font-size:12px;color:#0f766e;">※ +21日は21〜23日の間で運用に合わせて調整可能です。<br>※ +45日以降の長期掘り起こし（+120日・+180日）は現行のまま継続します。</p>
+    </div>
+  </div>
+
+  <!-- Day 0 -->
+  <div class="step" id="step-day0">
+    <div class="card card-border-gray">
+      <div class="card-header">
+        <span class="card-day">Day 0</span>
+        <span class="card-title">発送連絡</span>
+        <span class="badge" style="background:#f1f5f9;color:#64748b;">変更なし</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：配送ステータス変更時｜現行の発送連絡をそのまま使用</div>
+        <div class="auto-reply" style="border-left-color:#94a3b8;">
+          <div class="auto-reply-label">補足</div>
+          文面・タイミングとも現行のまま。ここは変更しません。
+        </div>
+        <div class="feedback-area" data-step="day0">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span>memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-prop-day0" placeholder="Day 0 へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"></div>
+
+  <!-- +7日 -->
+  <div class="step" id="step-day7">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">+7日</span>
+        <span class="card-title">到着確認＋立ち上がりフォロー</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：発送日から7日後｜配信形式：テキスト＋ボタン3つ</div>
+
+        <div class="msg-preview">
+          <div class="msg-bubble">こんにちは、Biyokuruです。
+お薬は無事にお手元に届きましたでしょうか？
+
+服用を始めて数日たつころかと思います。
+体調はいかがですか？</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">届きました・順調です</div>
+              <div class="msg-btn sec">届きましたが、気になることがある</div>
+              <div class="msg-btn gray">まだ届いていません</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="branch-section">
+          <div class="branch-label">分岐</div>
+          <div class="branch-grid cols-3">
+            <div class="branch-item bg-green">
+              「順調です」
+              <span class="result">→ 自動返信のみ。+21日へ</span>
+            </div>
+            <div class="branch-item bg-orange">
+              「気になることがある」
+              <span class="result">→ LINE相談へ誘導（スタッフ対応）</span>
+            </div>
+            <div class="branch-item bg-gray">
+              「まだ届いていません」
+              <span class="result">→ 配送確認（スタッフ対応）</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="auto-reply" style="margin-top:10px;">
+          <div class="auto-reply-label">「順調です」の自動返信：</div>
+          ご回答ありがとうございます。安心しました。
+続けていくなかで気になることがあれば、いつでもこのLINEにご相談ください。
+        </div>
+        <div class="auto-reply">
+          <div class="auto-reply-label">「気になることがある」の自動返信：</div>
+          ご回答ありがとうございます。気になっている内容を、このLINEにそのままお送りください。スタッフが確認し、必要に応じて医師にお繋ぎします。
+        </div>
+
+        <div class="auto-reply" style="margin-top:12px; border-left-color:#3b82f6;">
+          <div class="auto-reply-label">設計意図</div>
+          現行の+7日と+14日の役割（到着確認・立ち上がりの不安キャッチ）を1通に統合。不調のある方だけをLINE相談で拾い、それ以外は+21日までメッセージを送らない。
+        </div>
+
+        <div class="feedback-area" data-step="day7">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span>memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-prop-day7" placeholder="+7日 へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"></div>
+
+  <!-- +21日 -->
+  <div class="step" id="step-day21">
+    <div class="card card-border-teal">
+      <div class="card-header">
+        <span class="card-day">+21日</span>
+        <span class="card-title">効果ヒアリング＋再診のご案内</span>
+        <span class="badge" style="background:#ccfbf1;color:#0f766e;">今回の要</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：発送日から21日後（21〜23日で調整可）｜条件：タグ「再診_予約タップ」「再診_LINE希望」がない人のみ配信</div>
+
+        <div class="msg-preview">
+          <div class="msg-bubble">こんにちは、Biyokuruです。
+服用を始めて3週間ほどになりますね。
+
+その後のご様子について、いちばん近いものを教えてください。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">順調です（目標を達成できた）</div>
+              <div class="msg-btn blue">順調です（このまま続けたい）</div>
+              <div class="msg-btn warn">続けるか迷っている</div>
+              <div class="msg-btn sec">効果を感じない・体調が気になる</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="branch-section">
+          <div class="branch-label">回答別のフォロー配信</div>
+
+          <div style="margin-top:8px;">
+            <div style="font-size:12px;font-weight:600;color:#166534;margin-bottom:6px;">① 「目標を達成できた」→ 維持プランのご提案</div>
+            <div class="msg-preview" style="margin:6px 0 14px;">
+              <div class="msg-bubble" style="font-size:12px;">目標を達成されたとのこと、おめでとうございます。
+
+急にやめてしまうと、体重が戻りやすいことが分かっています。
+維持のための減量ペースの調整や、弱めのお薬への切り替えもご提案できますので、次回の診察でご相談ください。
+
+【単月分をご購入の方へ】
+そろそろお薬が少なくなるころかと思います。切り替えをご希望の場合は、お薬が切れる前に再診をご検討ください。
+
+【複数月分をまとめてご購入の方へ】
+その後、体調はいかがですか？
+もしご不安なことがございましたら、お気軽にご相談ください。</div>
+              <div class="msg-bubble" style="font-size:12px;">
+                <div class="msg-btns">
+                  <div class="msg-btn">再診を予約する</div>
+                  <div class="msg-btn sec">LINEで相談する</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="font-size:12px;font-weight:600;color:#1e40af;margin-bottom:6px;">② 「このまま続けたい」→ 再診のご案内</div>
+            <div class="msg-preview" style="margin:6px 0 14px;">
+              <div class="msg-bubble" style="font-size:12px;">順調に進んでいるようで、よかったです。
+
+【単月分をご購入の方へ】
+そろそろお薬が少なくなるころかと思います。継続をご希望の場合は、お薬が切れる前に再診をご検討ください。
+
+【複数月分をまとめてご購入の方へ】
+その後、体調はいかがですか？
+もしご不安なことがございましたら、お気軽にご相談ください。</div>
+              <div class="msg-bubble" style="font-size:12px;">
+                <div class="msg-btns">
+                  <div class="msg-btn">再診を予約する</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="font-size:12px;font-weight:600;color:#854d0e;margin-bottom:6px;">③ 「続けるか迷っている」→ 背中押し（インセンティブ）</div>
+            <div class="msg-preview" style="margin:6px 0 14px;">
+              <div class="msg-bubble" style="font-size:12px;">ご回答ありがとうございます。
+続けるかどうか、迷われるお気持ちはよく分かります。
+
+効果には個人差があり、1〜2ヶ月続けることで変化が安定してくる方も多くいらっしゃいます。
+
+いま継続を迷われている方向けに、次回のご予約でご利用いただける特典をご用意しています。
+詳しくはこちらからご確認ください。</div>
+              <div class="msg-bubble" style="font-size:12px;">
+                <div class="msg-btns">
+                  <div class="msg-btn warn">特典を見て予約する</div>
+                  <div class="msg-btn sec">LINEで相談する</div>
+                </div>
+              </div>
+            </div>
+            <div class="note-box" style="margin:0 0 14px;">
+              <b>要調整：</b>特典（オファー）の内容は貴院にてご検討ください。定例では「次回予約割引」「定期便」などの案が挙がっています。効果を実感していても継続しない層（アンケートで「順調」8割）への打ち手として、文言よりオファーが有効という前提の設計です。
+            </div>
+
+            <div style="font-size:12px;font-weight:600;color:#475569;margin-bottom:6px;">④ 「効果を感じない・体調が気になる」→ 医師相談へ</div>
+            <div class="msg-preview" style="margin:6px 0;">
+              <div class="msg-bubble" style="font-size:12px;">ご回答ありがとうございます。
+効果の出方には個人差があり、用量やお薬の調整で変わる場合もあります。
+
+次の診察で、現在の状況をふまえて医師と今後の方針をご相談いただけます。
+体調で気になることがあれば、このLINEでもご相談いただけます。</div>
+              <div class="msg-bubble" style="font-size:12px;">
+                <div class="msg-btns">
+                  <div class="msg-btn blue">医師に相談する（再診予約）</div>
+                  <div class="msg-btn sec">LINEで相談する</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="auto-reply" style="margin-top:12px; border-left-color:#0d9488;">
+          <div class="auto-reply-label">設計意図</div>
+          定例で確認した「順調か・体重は落ちているか・続けていけそうか」を1回のボタン選択に集約。現行の+14体調チェック・+20ヒアリング・+25再診案内の3通分を1通で完結させる。単月購入の薬切れ（約30日）の1週間前で、再診予約のタイミングとも重ならない。回答は全てタグ化し「継続意向×実際の再購入」を計測。
+        </div>
+
+        <div class="feedback-area" data-step="day21">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span>memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-prop-day21" placeholder="+21日 へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"></div>
+
+  <!-- +45日 -->
+  <div class="step" id="step-day45">
+    <div class="card card-border-teal">
+      <div class="card-header">
+        <span class="card-day">+45日</span>
+        <span class="card-title">掘り起こし＋体調フォロー</span>
+      </div>
+      <div class="card-body">
+        <div class="card-trigger">トリガー：発送日から45日後｜条件：タグ「再診_予約タップ」「再診_LINE希望」がない人のみ配信</div>
+
+        <div class="msg-preview">
+          <div class="msg-bubble">こんにちは、Biyokuruです。
+
+【単月分をご購入の方へ】
+お薬が切れてしばらく経つころかと思います。その後、体調やお身体の変化はいかがですか？
+治療は継続することで効果が安定してきます。再開をご希望の場合は、こちらからご予約いただけます。
+
+【複数月分をまとめてご購入の方へ】
+その後、体調はいかがですか？
+もしご不安なことがございましたら、お気軽にご相談ください。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">再診を予約する</div>
+              <div class="msg-btn sec">LINEで相談する</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="note-box">
+          <b>オプション：</b>8月からの薬価改定（約25%引き下げ）を再開の後押しとして本文に追加できます（例：「8月よりお薬の価格が改定され、これまでよりお求めやすくなりました」）。掲載可否・表現は薬価変更のご案内と合わせてご確認ください。
+        </div>
+
+        <div class="branch-section" style="margin-top:12px;">
+          <div class="branch-label">分岐</div>
+          <div class="branch-grid cols-3">
+            <div class="branch-item bg-green">
+              「再診を予約する」
+              <span class="result">→ 再診完了 → 次回発送でDay 0へループ</span>
+            </div>
+            <div class="branch-item bg-yellow">
+              「LINEで相談する」
+              <span class="result">→ スタッフ対応</span>
+            </div>
+            <div class="branch-item bg-gray">
+              未タップ
+              <span class="result">→ 現行どおり +120日・+180日の掘り起こしへ</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="auto-reply" style="margin-top:12px; border-left-color:#0d9488;">
+          <div class="auto-reply-label">設計意図</div>
+          単月購入の薬切れ後約2週間。現行の+35最終リマインドと+60掘り起こしを1通に統合し、追いすぎを防ぎつつ再開導線を確保。予約済みタグの方には届かないため、重複配信は発生しない。
+        </div>
+
+        <div class="feedback-area" data-step="day45">
+          <div class="feedback-toggle" onclick="toggleFeedback(this)">
+            <span>memo</span> フィードバック
+            <span class="fb-count"></span>
+          </div>
+          <div class="feedback-body">
+            <textarea class="feedback-textarea" data-key="fb-prop-day45" placeholder="+45日 へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <div class="feedback-status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let saveTimer = null;
+function toggleFeedback(btn) {
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+  if (body.classList.contains('open')) body.querySelector('textarea').focus();
+}
+function saveFeedback(textarea) {
+  const key = textarea.dataset.key;
+  const status = textarea.nextElementSibling;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    localStorage.setItem(key, textarea.value);
+    status.textContent = '保存しました';
+    status.className = 'feedback-status saved';
+    setTimeout(() => { status.textContent = ''; status.className = 'feedback-status'; }, 2000);
+    updateBadge(textarea);
+  }, 500);
+}
+function updateBadge(textarea) {
+  const badge = textarea.closest('.feedback-area').querySelector('.fb-count');
+  const val = textarea.value.trim();
+  if (val) {
+    badge.textContent = val.split('\n').filter(l => l.trim()).length;
+    badge.classList.add('has');
+  } else {
+    badge.classList.remove('has');
+  }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.feedback-textarea').forEach(ta => {
+    const saved = localStorage.getItem(ta.dataset.key);
+    if (saved) {
+      ta.value = saved;
+      updateBadge(ta);
+      ta.closest('.feedback-body').classList.add('open');
+    }
+  });
+});
+function exportFeedback() {
+  const lines = [];
+  document.querySelectorAll('.feedback-textarea').forEach(ta => {
+    const val = ta.value.trim();
+    if (val) lines.push(`【${ta.dataset.key.replace('fb-prop-', '').replace('day', 'Day ')}】\n${val}`);
+  });
+  if (!lines.length) { alert('まだフィードバックが入力されていません'); return; }
+  const text = '=== 処方薬シナリオ改修案 フィードバック ===\n\n' + lines.join('\n\n---\n\n');
+  navigator.clipboard.writeText(text).then(() => {
+    alert('フィードバックをコピーしました（' + lines.length + '件）');
+  });
+}
+function clearAllFeedback() {
+  if (!confirm('全てのフィードバックを削除しますか？')) return;
+  document.querySelectorAll('.feedback-textarea').forEach(ta => {
+    ta.value = '';
+    localStorage.removeItem(ta.dataset.key);
+    updateBadge(ta);
+    ta.closest('.feedback-body').classList.remove('open');
+  });
+}
+</script>
+
+</body>
+</html>
