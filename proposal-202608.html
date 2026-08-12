@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <!--
   === 処方薬シナリオ 改修案（2026-08定例をふまえて） ===
-  [2026-08-08] 初稿
-  - 配信タイミングを 7日・21日・45日 の3通に整理（現行 7・14・21・30日）
+  [2026-08-08] v2
+  - 配信タイミングを 7日・23日・45日 の3通に整理（現行 7・14・21・30日）
     → 30日前後の再診予約済みユーザーへの重複配信を解消・配信間隔を拡大
-  - +21日ヒアリングをシンプル化（順調か／体重／続けていけそうか）し、回答で分岐
-    → 目標達成層=弱めのお薬への切替提案／迷い層=インセンティブ／不調層=医師相談
-  - +21日・+45日は再診予約済みタグ（再診_予約タップ/再診_LINE希望）を配信除外
+  - +23日（再診）のテーマ＝「いかに続ける選択肢を持ってもらうか」
+    ヒアリングは「体重落ちてますか？」をシンプルに聞き、回答で分岐:
+    ① 順調（目標まではもう少し）→ 続ける選択肢の提示・再診案内
+    ② 目標体重に到達 → いきなり辞めないようフォロー（維持・弱めのお薬への切替）
+    ③ あまり変わらない → 医師相談（用量・薬の調整）
+    ＋ ちゃんと回答してくれた方には特典（オファー）を提示
+  - +23日・+45日は再診予約済みタグ（再診_予約タップ/再診_LINE希望）を配信除外
 -->
 <html lang="ja">
 <head>
@@ -183,7 +187,7 @@
 
 <div class="page-header">
   <h1>処方薬シナリオ 改修案</h1>
-  <p>配信タイミングの整理（7日・21日・45日）とヒアリングのシンプル化</p>
+  <p>配信タイミングの整理（7日・23日・45日）｜テーマ：いかに「続ける選択肢」を持ってもらうか</p>
   <span class="draft-badge">ドラフト 2026-08-08 ｜ 8/7定例の内容を反映</span>
 </div>
 
@@ -203,17 +207,18 @@
   <div class="overview">
     <div class="overview-head">改修ポイント（8/7定例より）</div>
     <div class="overview-body">
-      <p style="margin-bottom:6px;">1. <b>配信を発送後 7日・21日・45日 の3通に整理</b>（現行：7・14・21・30日）</p>
-      <p style="margin-bottom:6px;">2. <b>+21日・+45日は再診予約済みの方を配信除外</b>（タグ「再診_予約タップ」「再診_LINE希望」）→ 30日前後の再診予約済みの方への重複配信を解消</p>
-      <p style="margin-bottom:10px;">3. <b>ヒアリングをシンプル化</b>：「順調か・体重は落ちているか・続けていけそうか」を1回のボタン選択で確認し、回答に応じて提案を出し分け</p>
+      <p style="margin-bottom:6px;">1. <b>配信を発送後 7日・23日・45日 の3通に整理</b>（現行：7・14・21・30日）</p>
+      <p style="margin-bottom:6px;">2. <b>+23日・+45日は再診予約済みの方を配信除外</b>（タグ「再診_予約タップ」「再診_LINE希望」）→ 30日前後の再診予約済みの方への重複配信を解消</p>
+      <p style="margin-bottom:6px;">3. <b>+23日（再診）のテーマ＝いかに「続ける選択肢」を持ってもらうか</b>：「体重は落ちていますか？」をシンプルに聞き、回答で出し分け（目標まではもう少し／目標到達／変わらない）。目標到達者には<b>いきなり辞めないためのフォロー</b>を入れる</p>
+      <p style="margin-bottom:10px;">4. <b>ちゃんと回答してくれた方には特典（オファー）</b>を提示 → 回答率と継続率を同時に引き上げる</p>
 
       <table class="timing-table">
         <tr><th>タイミング</th><th>役割</th><th>ねらい</th></tr>
         <tr><td><b>+7日</b></td><td>到着確認＋立ち上がりフォロー</td><td>不安・不調の早期キャッチ → LINE相談へ</td></tr>
-        <tr><td><b>+21日</b></td><td>効果ヒアリング＋再診案内</td><td>単月購入の薬切れ約1週間前。回答別に切替提案・インセンティブ・医師相談を出し分け</td></tr>
+        <tr><td><b>+23日</b></td><td>再診のご案内（体重ヒアリング）</td><td>単月購入の薬切れ約1週間前。「続ける選択肢」を回答別に提示＋回答特典</td></tr>
         <tr><td><b>+45日</b></td><td>掘り起こし＋体調フォロー</td><td>薬切れ後の再開促進。予約済みは届かない</td></tr>
       </table>
-      <p style="font-size:12px;color:#0f766e;">※ +21日は21〜23日の間で運用に合わせて調整可能です。<br>※ +45日以降の長期掘り起こし（+120日・+180日）は現行のまま継続します。</p>
+      <p style="font-size:12px;color:#0f766e;">※ +45日以降の長期掘り起こし（+120日・+180日）は現行のまま継続します。</p>
     </div>
   </div>
 
@@ -277,7 +282,7 @@
           <div class="branch-grid cols-3">
             <div class="branch-item bg-green">
               「順調です」
-              <span class="result">→ 自動返信のみ。+21日へ</span>
+              <span class="result">→ 自動返信のみ。+23日へ</span>
             </div>
             <div class="branch-item bg-orange">
               「気になることがある」
@@ -302,7 +307,7 @@
 
         <div class="auto-reply" style="margin-top:12px; border-left-color:#3b82f6;">
           <div class="auto-reply-label">設計意図</div>
-          現行の+7日と+14日の役割（到着確認・立ち上がりの不安キャッチ）を1通に統合。不調のある方だけをLINE相談で拾い、それ以外は+21日までメッセージを送らない。
+          現行の+7日と+14日の役割（到着確認・立ち上がりの不安キャッチ）を1通に統合。不調のある方だけをLINE相談で拾い、それ以外は+23日までメッセージを送らない。
         </div>
 
         <div class="feedback-area" data-step="day7">
@@ -321,28 +326,28 @@
 
   <div class="flow-arrow"></div>
 
-  <!-- +21日 -->
-  <div class="step" id="step-day21">
+  <!-- +23日 -->
+  <div class="step" id="step-day23">
     <div class="card card-border-teal">
       <div class="card-header">
-        <span class="card-day">+21日</span>
-        <span class="card-title">効果ヒアリング＋再診のご案内</span>
+        <span class="card-day">+23日</span>
+        <span class="card-title">再診のご案内（体重ヒアリング）</span>
         <span class="badge" style="background:#ccfbf1;color:#0f766e;">今回の要</span>
       </div>
       <div class="card-body">
-        <div class="card-trigger">トリガー：発送日から21日後（21〜23日で調整可）｜条件：タグ「再診_予約タップ」「再診_LINE希望」がない人のみ配信</div>
+        <div class="card-trigger">トリガー：発送日から23日後｜条件：タグ「再診_予約タップ」「再診_LINE希望」がない人のみ配信｜テーマ：いかに「続ける選択肢」を持ってもらうか</div>
 
         <div class="msg-preview">
           <div class="msg-bubble">こんにちは、Biyokuruです。
 服用を始めて3週間ほどになりますね。
 
-その後のご様子について、いちばん近いものを教えてください。</div>
+体重は落ちていますか？
+いちばん近いものを教えてください。</div>
           <div class="msg-bubble">
             <div class="msg-btns">
-              <div class="msg-btn">順調です（目標を達成できた）</div>
-              <div class="msg-btn blue">順調です（このまま続けたい）</div>
-              <div class="msg-btn warn">続けるか迷っている</div>
-              <div class="msg-btn sec">効果を感じない・体調が気になる</div>
+              <div class="msg-btn">落ちている（目標まではもう少し）</div>
+              <div class="msg-btn blue">目標体重に到達した</div>
+              <div class="msg-btn sec">あまり変わっていない</div>
             </div>
           </div>
         </div>
@@ -351,30 +356,13 @@
           <div class="branch-label">回答別のフォロー配信</div>
 
           <div style="margin-top:8px;">
-            <div style="font-size:12px;font-weight:600;color:#166534;margin-bottom:6px;">① 「目標を達成できた」→ 維持プランのご提案</div>
+            <div style="font-size:12px;font-weight:600;color:#166534;margin-bottom:6px;">① 「落ちている（目標まではもう少し）」→ 続ける選択肢の提示</div>
             <div class="msg-preview" style="margin:6px 0 14px;">
-              <div class="msg-bubble" style="font-size:12px;">目標を達成されたとのこと、おめでとうございます。
+              <div class="msg-bubble" style="font-size:12px;">順調に落ちているとのこと、素晴らしいです。
+目標体重まで、あと少しですね。
 
-急にやめてしまうと、体重が戻りやすいことが分かっています。
-維持のための減量ペースの調整や、弱めのお薬への切り替えもご提案できますので、次回の診察でご相談ください。
-
-【単月分をご購入の方へ】
-そろそろお薬が少なくなるころかと思います。切り替えをご希望の場合は、お薬が切れる前に再診をご検討ください。
-
-【複数月分をまとめてご購入の方へ】
-その後、体調はいかがですか？
-もしご不安なことがございましたら、お気軽にご相談ください。</div>
-              <div class="msg-bubble" style="font-size:12px;">
-                <div class="msg-btns">
-                  <div class="msg-btn">再診を予約する</div>
-                  <div class="msg-btn sec">LINEで相談する</div>
-                </div>
-              </div>
-            </div>
-
-            <div style="font-size:12px;font-weight:600;color:#1e40af;margin-bottom:6px;">② 「このまま続けたい」→ 再診のご案内</div>
-            <div class="msg-preview" style="margin:6px 0 14px;">
-              <div class="msg-bubble" style="font-size:12px;">順調に進んでいるようで、よかったです。
+ここで治療をやめてしまうと、せっかくのペースが途切れてしまうことがあります。
+目標達成まで続ける選択肢も、ぜひご検討ください。
 
 【単月分をご購入の方へ】
 そろそろお薬が少なくなるころかと思います。継続をご希望の場合は、お薬が切れる前に再診をご検討ください。
@@ -385,31 +373,35 @@
               <div class="msg-bubble" style="font-size:12px;">
                 <div class="msg-btns">
                   <div class="msg-btn">再診を予約する</div>
-                </div>
-              </div>
-            </div>
-
-            <div style="font-size:12px;font-weight:600;color:#854d0e;margin-bottom:6px;">③ 「続けるか迷っている」→ 背中押し（インセンティブ）</div>
-            <div class="msg-preview" style="margin:6px 0 14px;">
-              <div class="msg-bubble" style="font-size:12px;">ご回答ありがとうございます。
-続けるかどうか、迷われるお気持ちはよく分かります。
-
-効果には個人差があり、1〜2ヶ月続けることで変化が安定してくる方も多くいらっしゃいます。
-
-いま継続を迷われている方向けに、次回のご予約でご利用いただける特典をご用意しています。
-詳しくはこちらからご確認ください。</div>
-              <div class="msg-bubble" style="font-size:12px;">
-                <div class="msg-btns">
-                  <div class="msg-btn warn">特典を見て予約する</div>
                   <div class="msg-btn sec">LINEで相談する</div>
                 </div>
               </div>
             </div>
-            <div class="note-box" style="margin:0 0 14px;">
-              <b>要調整：</b>特典（オファー）の内容は貴院にてご検討ください。定例では「次回予約割引」「定期便」などの案が挙がっています。効果を実感していても継続しない層（アンケートで「順調」8割）への打ち手として、文言よりオファーが有効という前提の設計です。
+
+            <div style="font-size:12px;font-weight:600;color:#1e40af;margin-bottom:6px;">② 「目標体重に到達した」→ いきなり辞めないためのフォロー</div>
+            <div class="msg-preview" style="margin:6px 0 14px;">
+              <div class="msg-bubble" style="font-size:12px;">目標体重への到達、おめでとうございます。
+
+ただ、お薬を急にやめてしまうと、体重が戻りやすいことが分かっています。
+いきなりやめるのではなく、弱めのお薬への切り替えや、量を少しずつ減らしていく方法もございます。
+
+リバウンドを防ぐ進め方について、次回の診察で医師とご相談ください。
+
+【単月分をご購入の方へ】
+そろそろお薬が少なくなるころかと思います。切り替えをご希望の場合は、お薬が切れる前に再診をご検討ください。
+
+【複数月分をまとめてご購入の方へ】
+その後、体調はいかがですか？
+もしご不安なことがございましたら、お気軽にご相談ください。</div>
+              <div class="msg-bubble" style="font-size:12px;">
+                <div class="msg-btns">
+                  <div class="msg-btn blue">維持の進め方を相談する（再診予約）</div>
+                  <div class="msg-btn sec">LINEで相談する</div>
+                </div>
+              </div>
             </div>
 
-            <div style="font-size:12px;font-weight:600;color:#475569;margin-bottom:6px;">④ 「効果を感じない・体調が気になる」→ 医師相談へ</div>
+            <div style="font-size:12px;font-weight:600;color:#475569;margin-bottom:6px;">③ 「あまり変わっていない」→ 医師相談へ</div>
             <div class="msg-preview" style="margin:6px 0;">
               <div class="msg-bubble" style="font-size:12px;">ご回答ありがとうございます。
 効果の出方には個人差があり、用量やお薬の調整で変わる場合もあります。
@@ -426,18 +418,37 @@
           </div>
         </div>
 
-        <div class="auto-reply" style="margin-top:12px; border-left-color:#0d9488;">
-          <div class="auto-reply-label">設計意図</div>
-          定例で確認した「順調か・体重は落ちているか・続けていけそうか」を1回のボタン選択に集約。現行の+14体調チェック・+20ヒアリング・+25再診案内の3通分を1通で完結させる。単月購入の薬切れ（約30日）の1週間前で、再診予約のタイミングとも重ならない。回答は全てタグ化し「継続意向×実際の再購入」を計測。
+        <!-- 回答特典 -->
+        <div style="margin-top:16px;padding-top:14px;border-top:2px dashed #0d9488;">
+          <div style="font-size:12px;font-weight:600;color:#0f766e;margin-bottom:6px;">回答特典（①〜③どの回答でも、フォロー配信のあとに共通で配信）</div>
+          <div class="msg-preview" style="margin:6px 0;">
+            <div class="msg-bubble" style="font-size:12px;">ご回答ありがとうございました。
+
+ご回答いただいた方限定で、次回のご予約でご利用いただける特典をご用意しています。
+ぜひこの機会にご活用ください。</div>
+            <div class="msg-bubble" style="font-size:12px;">
+              <div class="msg-btns">
+                <div class="msg-btn warn">特典を見て予約する</div>
+              </div>
+            </div>
+          </div>
+          <div class="note-box">
+            <b>要調整：</b>特典（オファー）の内容は貴院にてご検討ください。定例では「次回予約割引」「定期便」などの案が挙がっています。効果を実感していても継続につながらない層への打ち手として、文言変更よりオファーが有効という前提の設計です。回答者限定にすることで、回答率と継続率を同時に引き上げます。
+          </div>
         </div>
 
-        <div class="feedback-area" data-step="day21">
+        <div class="auto-reply" style="margin-top:12px; border-left-color:#0d9488;">
+          <div class="auto-reply-label">設計意図</div>
+          テーマは「いかに続ける選択肢を持ってもらうか」。ヒアリングは「体重は落ちていますか？」の1問に絞る。目標まではもう少しの層には続ける理由を、目標到達層にはいきなり辞めないための維持プラン（弱めのお薬への切り替え等）を提示し、どの回答でも「続ける選択肢」が残る構成。単月購入の薬切れ（約30日）の1週間前で、再診予約のタイミングとも重ならない。回答はタグ化し「継続意向×実際の再購入」を計測。
+        </div>
+
+        <div class="feedback-area" data-step="day23">
           <div class="feedback-toggle" onclick="toggleFeedback(this)">
             <span>memo</span> フィードバック
             <span class="fb-count"></span>
           </div>
           <div class="feedback-body">
-            <textarea class="feedback-textarea" data-key="fb-prop-day21" placeholder="+21日 へのコメント..." oninput="saveFeedback(this)"></textarea>
+            <textarea class="feedback-textarea" data-key="fb-prop-day23" placeholder="+23日 へのコメント..." oninput="saveFeedback(this)"></textarea>
             <div class="feedback-status"></div>
           </div>
         </div>
