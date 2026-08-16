@@ -5,10 +5,10 @@
   - 配信タイミングを 7日・23日・45日 の3通に整理（現行 7・14・21・30日）
     → 30日前後の再診予約済みユーザーへの重複配信を解消・配信間隔を拡大
   - +23日（再診）のテーマ＝「いかに続ける選択肢を持ってもらうか」
-    ヒアリングは「体重落ちてますか？」をシンプルに聞き、回答で分岐:
-    ① 順調（目標まではもう少し）→ 続ける選択肢の提示・再診案内
-    ② 目標体重に到達 → いきなり辞めないようフォロー（維持・弱めのお薬への切替）
-    ③ あまり変わらない → 医師相談（用量・薬の調整）
+    ヒアリングは「効果は実感できていますか？」をシンプルに聞き、回答で分岐（痩身以外の科目にも対応）:
+    ① 十分に実感しており満足だ → いきなり辞めないようフォロー（維持・弱めのお薬への切替）
+    ② 実感しているが、まだ続けていきたい → 続ける選択肢の提示・再診案内
+    ③ 実感していない → 医師相談（用量・薬の調整）
   - 特典（オファー）は+45日で配信: +23日のヒアリングに回答した方のみ（タグで判定）
   - +23日・+45日は再診予約済みタグ（再診_予約タップ/再診_LINE希望）を配信除外
 -->
@@ -303,7 +303,7 @@
     <div class="card card-border-teal">
       <div class="card-header">
         <span class="card-day">+23日</span>
-        <span class="card-title">再診のご案内（体重ヒアリング）</span>
+        <span class="card-title">再診のご案内（効果実感ヒアリング）</span>
         <span class="badge" style="background:#ccfbf1;color:#0f766e;">今回の要</span>
       </div>
       <div class="card-body">
@@ -313,13 +313,13 @@
           <div class="msg-bubble">こんにちは、Biyokuruです。
 服用を始めて3週間ほどになりますね。
 
-体重は落ちていますか？
+効果は実感できていますか？
 いちばん近いものを教えてください。</div>
           <div class="msg-bubble">
             <div class="msg-btns">
-              <div class="msg-btn">落ちている（目標まではもう少し）</div>
-              <div class="msg-btn blue">目標体重に到達した</div>
-              <div class="msg-btn sec">あまり変わっていない</div>
+              <div class="msg-btn">十分に実感しており満足だ</div>
+              <div class="msg-btn blue">実感しているが、まだ続けていきたい</div>
+              <div class="msg-btn sec">実感していない</div>
             </div>
           </div>
         </div>
@@ -328,36 +328,14 @@
           <div class="branch-label">回答別のフォロー配信</div>
 
           <div style="margin-top:8px;">
-            <div style="font-size:12px;font-weight:600;color:#166534;margin-bottom:6px;">① 「落ちている（目標まではもう少し）」→ 続ける選択肢の提示</div>
+            <div style="font-size:12px;font-weight:600;color:#166534;margin-bottom:6px;">① 「十分に実感しており満足だ」→ いきなり辞めないためのフォロー</div>
             <div class="msg-preview" style="margin:6px 0 14px;">
-              <div class="msg-bubble" style="font-size:12px;">順調に落ちているとのこと、素晴らしいです！
-目標体重まで、あと少しですね✨
+              <div class="msg-bubble" style="font-size:12px;">十分に効果を実感されているとのこと、よかったです！🎉
 
-ここで治療をやめてしまうと、せっかくのペースが途切れてしまうことがあります。
-目標達成まで続ける選択肢も、ぜひご検討ください。
-
-【単月分をご購入の方へ】
-そろそろお薬が少なくなるころかと思います。継続をご希望の場合は、お薬が切れる前に再診をご検討ください。
-
-【複数月分をまとめてご購入の方へ】
-お薬はまだお手元にあるかと思います。このままのペースで、目標達成まで続けていきましょう。
-気になることがあれば、お気軽にご相談ください。</div>
-              <div class="msg-bubble" style="font-size:12px;">
-                <div class="msg-btns">
-                  <div class="msg-btn">再診を予約する</div>
-                  <div class="msg-btn sec">LINEで相談する</div>
-                </div>
-              </div>
-            </div>
-
-            <div style="font-size:12px;font-weight:600;color:#1e40af;margin-bottom:6px;">② 「目標体重に到達した」→ いきなり辞めないためのフォロー</div>
-            <div class="msg-preview" style="margin:6px 0 14px;">
-              <div class="msg-bubble" style="font-size:12px;">目標体重への到達、おめでとうございます！🎉
-
-ただ、お薬を急にやめてしまうと、体重が戻りやすいことが分かっています。
+ただ、お薬を急にやめてしまうと、体調や症状が元に戻ってしまうことがあります。
 いきなりやめるのではなく、弱めのお薬への切り替えや、量を少しずつ減らしていく方法もございます。
 
-リバウンドを防ぐ進め方について、次回の診察で医師とご相談ください。
+今後のやめ方・続け方について、次回の診察で医師とご相談ください。
 
 【単月分をご購入の方へ】
 そろそろお薬が少なくなるころかと思います。切り替えをご希望の場合は、お薬が切れる前に再診をご検討ください。
@@ -367,13 +345,34 @@
 お気軽にご相談ください。</div>
               <div class="msg-bubble" style="font-size:12px;">
                 <div class="msg-btns">
-                  <div class="msg-btn blue">維持の進め方を相談する（再診予約）</div>
+                  <div class="msg-btn">今後の進め方を相談する（再診予約）</div>
                   <div class="msg-btn sec">LINEで相談する</div>
                 </div>
               </div>
             </div>
 
-            <div style="font-size:12px;font-weight:600;color:#475569;margin-bottom:6px;">③ 「あまり変わっていない」→ 医師相談へ</div>
+            <div style="font-size:12px;font-weight:600;color:#1e40af;margin-bottom:6px;">② 「実感しているが、まだ続けていきたい」→ 続ける選択肢の提示</div>
+            <div class="msg-preview" style="margin:6px 0 14px;">
+              <div class="msg-bubble" style="font-size:12px;">効果を実感されているとのこと、素晴らしいです！✨
+
+治療は継続することで、変化がより安定してきます。
+ここでやめてしまうと、せっかくの変化が途切れてしまうこともありますので、このまま続ける選択肢もぜひご検討ください。
+
+【単月分をご購入の方へ】
+そろそろお薬が少なくなるころかと思います。継続をご希望の場合は、お薬が切れる前に再診をご検討ください。
+
+【複数月分をまとめてご購入の方へ】
+お薬はまだお手元にあるかと思います。このままのペースで続けていきましょう。
+気になることがあれば、お気軽にご相談ください。</div>
+              <div class="msg-bubble" style="font-size:12px;">
+                <div class="msg-btns">
+                  <div class="msg-btn blue">再診を予約する</div>
+                  <div class="msg-btn sec">LINEで相談する</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="font-size:12px;font-weight:600;color:#475569;margin-bottom:6px;">③ 「実感していない」→ 医師相談へ</div>
             <div class="msg-preview" style="margin:6px 0;">
               <div class="msg-bubble" style="font-size:12px;">ご回答ありがとうございます。
 効果の出方には個人差があり、用量やお薬の調整で変わる場合もあります。
@@ -438,7 +437,7 @@
         <div style="margin-top:16px;padding-top:14px;border-top:2px dashed #0d9488;">
           <div style="font-size:12px;font-weight:600;color:#0f766e;margin-bottom:6px;">回答特典（+23日のヒアリングに回答した方のみ・タグで判定｜上記メッセージに続けて配信）※特典内容・クーポンコードは仮</div>
           <div class="msg-preview" style="margin:6px 0;">
-            <div class="msg-bubble" style="font-size:12px;">先日は体重の変化についてのアンケートにご回答いただき、ありがとうございました。
+            <div class="msg-bubble" style="font-size:12px;">先日は効果のご実感についてのアンケートにご回答いただき、ありがとうございました。
 
 ご回答いただいた方限定の特典をご用意しました🎁
 
