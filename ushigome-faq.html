@@ -2,9 +2,9 @@
 <!--
   === 牛込内科・糖尿病クリニック 公式LINE よくある質問（Q&A）案 ===
   [2026-09-02] v2 ／ 必要最低限に絞った構成
-  - 導線：リッチメニュー「よくある質問」→ メッセージ1通＋クイックリプライ7つ → 回答
-    ※カルーセル・階層分けは不要
-  - 回答7問はすべて公式サイト記載の内容のみ（出典を明記）→ 先方確認なしで実装可能
+  - 導線：リッチメニュー「よくある質問」→ カルーセル2枚（3ボタン×2）→ 回答
+    ※カルーセルは全カードでボタン数を揃える必要があるため3つずつ
+  - 回答6問はすべて公式サイト記載の内容のみ（出典を明記）→ 先方確認なしで実装可能
   - 一覧にない質問はトークへ送っていただく案内を初回メッセージに記載
   - 先方確認なしで実装できる構成
   - 今後の追加候補（届いた質問を見てから、必要なものだけ・要クリニック確認）：
@@ -142,12 +142,35 @@
   }
   .screen-label .memo { font-weight: 400; color: #94a3b8; font-size: 11.5px; }
   .screen { background: #e8edf3; border-radius: 10px; padding: 14px; }
-  .qr-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-  .qr-chip {
-    background: #fff; color: #0f4c81;
-    border: 1px solid #0f4c81; border-radius: 16px;
-    padding: 6px 13px; font-size: 12.5px; font-weight: 500; white-space: nowrap;
+  .carousel {
+    display: flex; gap: 8px; overflow-x: auto;
+    margin-top: 8px; padding-bottom: 6px; -webkit-overflow-scrolling: touch;
   }
+  .cara-card {
+    flex: none; width: 224px;
+    background: #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06);
+    display: flex; flex-direction: column;
+  }
+  .cara-top {
+    background: #0f4c81; color: #fff;
+    padding: 10px 12px; font-size: 13px; font-weight: 700; line-height: 1.4;
+  }
+  .cara-top .cara-no {
+    display: block; font-size: 10px; font-weight: 600;
+    color: #a9c6e4; letter-spacing: .08em; margin-bottom: 2px;
+  }
+  .cara-desc {
+    padding: 9px 12px 10px; flex: 1;
+    font-size: 11.5px; line-height: 1.6; color: #64748b;
+  }
+  .cara-btns { display: flex; flex-direction: column; }
+  .cara-btn {
+    border-top: 1px solid #f1f5f9; padding: 10px 8px;
+    text-align: center; font-size: 12.5px; font-weight: 600; color: #0f4c81;
+    line-height: 1.4;
+  }
+  .cara-hint { margin-top: 8px; font-size: 11px; color: #64748b; text-align: center; }
 
   .source {
     margin-top: 10px; font-size: 11.5px; color: #64748b;
@@ -165,14 +188,14 @@
 
 <div class="page-header">
   <h1>公式LINE よくある質問（Q&amp;A）案</h1>
-  <p>牛込内科・糖尿病クリニック｜7問、メッセージ1通で完結する形</p>
+  <p>牛込内科・糖尿病クリニック｜6問、カルーセル2枚で完結する形</p>
   <span class="draft-badge">v2 2026-09-02 ｜ 最小構成</span>
 </div>
 
 <div class="lead-box">
   <div class="lead-title">この資料の見かた</div>
   <div>
-    はじめは<b>7問だけ</b>で立ち上げる案です。回答は<b>公式サイトに記載がある内容だけ</b>で作っているため、<b>確認待ちなしでそのまま実装できます</b>。<br>
+    はじめは<b>6問だけ</b>で立ち上げる案です。回答は<b>公式サイトに記載がある内容だけ</b>で作っているため、<b>確認待ちなしでそのまま実装できます</b>。<br>
     一覧にない質問はトークに直接送っていただく形にしているので、実際に届いた質問を見てから増やしていけます。
   </div>
 </div>
@@ -182,7 +205,7 @@
   <div class="overview">
     <div class="overview-head">配信の仕組み</div>
     <div class="overview-body">
-      カルーセルや階層分けは使いません。<b>メッセージ1通＋選択肢（クイックリプライ）</b>で完結します。選択肢は画面下部に並ぶだけで、トークを圧迫しません。
+      階層分けはしません。<b>カルーセル2枚</b>で完結します（1カードにボタン3つ／全カードで数を揃える必要があるため3つずつ）。
       <div class="flow-steps">
         <div class="flow-step-row">
           <span class="flow-step-no">入口</span>
@@ -190,7 +213,7 @@
         </div>
         <div class="flow-step-row">
           <span class="flow-step-no">選択</span>
-          <span class="flow-step-txt"><b>メッセージ1通に、質問の選択肢を7つ表示</b><br><span>質問がそのまま選択肢。1タップで回答が届きます</span></span>
+          <span class="flow-step-txt"><b>カード2枚に、質問を3つずつ配置</b><br><span>質問がそのままボタン。1タップで回答が届きます</span></span>
         </div>
         <div class="flow-step-row">
           <span class="flow-step-no">回答</span>
@@ -202,24 +225,36 @@
         </div>
       </div>
 
-      <div class="screen-label"><span class="lv">画面</span>「よくある質問」をタップした直後<span class="memo">メッセージ1通＋選択肢7つ</span></div>
+      <div class="screen-label"><span class="lv">画面</span>「よくある質問」をタップした直後<span class="memo">カルーセル2枚</span></div>
       <div class="screen">
         <div class="msg-bubble" style="max-width:100%;">お知りになりたいことをお選びください。
 
 一覧にない内容は、そのままこのトークにご質問をお送りください。</div>
-        <div class="qr-chips">
-          <span class="qr-chip">診察時間・休診日</span>
-          <span class="qr-chip">場所・駐車場</span>
-          <span class="qr-chip">予約の方法</span>
-          <span class="qr-chip">診てもらえる症状</span>
-          <span class="qr-chip">健診で異常が出た</span>
-          <span class="qr-chip">自費診療のメニュー</span>
-          <span class="qr-chip">オンライン診療</span>
+        <div class="carousel">
+          <div class="cara-card">
+            <div class="cara-top"><span class="cara-no">CARD 01</span>受診の前に</div>
+            <div class="cara-desc">診察時間、場所、ご予約について</div>
+            <div class="cara-btns">
+              <div class="cara-btn">診察時間・休診日</div>
+              <div class="cara-btn">場所・駐車場</div>
+              <div class="cara-btn">予約の方法</div>
+            </div>
+          </div>
+          <div class="cara-card">
+            <div class="cara-top"><span class="cara-no">CARD 02</span>診療内容</div>
+            <div class="cara-desc">診ている症状と、自費診療・オンライン診療</div>
+            <div class="cara-btns">
+              <div class="cara-btn">診てもらえる症状</div>
+              <div class="cara-btn">自費診療のメニュー</div>
+              <div class="cara-btn">オンライン診療</div>
+            </div>
+          </div>
         </div>
+        <div class="cara-hint">← 横にスワイプ →</div>
       </div>
 
       <div class="note-box plain">
-        <b>実装するもの</b>：リッチメニューのボタン1つ ＋ 上のメッセージ1通 ＋ 回答7通。以上です。
+        <b>実装するもの</b>：リッチメニューのボタン1つ ＋ 上のカルーセル1通 ＋ 回答6通。以上です。
       </div>
       <div class="note-box">
         個別の症状相談（「この症状は受診すべきか」など）はQ&amp;Aでは回答せず、「診察でご相談ください」と受診案内に寄せる方針です。
@@ -227,7 +262,7 @@
     </div>
   </div>
 
-  <div class="section-title"><span class="cat-no">回答</span>7問の文面<span class="cat-count">すべてHP記載の内容</span></div>
+  <div class="section-title"><span class="cat-no">回答</span>6問の文面<span class="cat-count">すべてHP記載の内容</span></div>
 
   <div class="step">
     <div class="card card-border-blue">
@@ -318,7 +353,7 @@
         <div class="msg-preview">
           <div class="msg-bubble">風邪、発熱、咳、のどの痛み、胃痛・胃もたれ、下痢、便秘、頭痛など、一般内科全般に対応しております。
 
-糖尿病・高血圧・脂質異常症などの生活習慣病、甲状腺・副腎・下垂体などホルモンの病気も、専門的に診療しております。
+糖尿病・高血圧・脂質異常症などの生活習慣病、甲状腺・副腎・下垂体などホルモンの病気も、専門的に診療しております。健康診断で指摘された血圧・血糖値・脂質・尿酸値・肝機能などの再検査もお任せください。
 
 症状がひどくなる前に、お早めにご相談ください。</div>
           <div class="msg-bubble">
@@ -328,7 +363,7 @@
             </div>
           </div>
         </div>
-        <div class="source">出典：公式サイト「保険診療」一般内科・生活習慣病・甲状腺／副腎／下垂体疾患の説明文</div>
+        <div class="source">出典：公式サイト「保険診療」一般内科・生活習慣病・甲状腺／副腎／下垂体疾患・健康診断異常フォローの説明文</div>
       </div>
     </div>
   </div>
@@ -337,28 +372,6 @@
     <div class="card card-border-blue">
       <div class="card-header">
         <span class="card-day">Q5</span>
-        <span class="card-title">健診で異常が出た</span>
-      </div>
-      <div class="card-body">
-        <div class="msg-preview">
-          <div class="msg-bubble">血圧、血糖値、脂質、尿酸値、肝機能の異常など、健康診断で指摘された項目の精査・管理を行っております。
-
-放置せず早めに対応することで、将来的な病気の予防につながります。健診の結果をお持ちのうえ、ご来院ください。</div>
-          <div class="msg-bubble">
-            <div class="msg-btns">
-              <div class="msg-btn">診察予約する</div>
-            </div>
-          </div>
-        </div>
-        <div class="source">出典：公式サイト「保険診療 ＞ 健康診断異常フォロー」</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="card card-border-blue">
-      <div class="card-header">
-        <span class="card-day">Q6</span>
         <span class="card-title">自費診療のメニュー</span>
       </div>
       <div class="card-body">
@@ -387,7 +400,7 @@
   <div class="step">
     <div class="card card-border-blue">
       <div class="card-header">
-        <span class="card-day">Q7</span>
+        <span class="card-day">Q6</span>
         <span class="card-title">オンライン診療</span>
       </div>
       <div class="card-body">
