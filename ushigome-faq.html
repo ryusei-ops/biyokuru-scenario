@@ -121,6 +121,66 @@
   .msg-btn.sec { background: #fff; color: #0f4c81; border: 2px solid #0f4c81; }
   .msg-btn.gray { background: #94a3b8; }
 
+  /* 画面イメージ（カルーセル・クイックリプライ） */
+  .screen-label {
+    display: flex; align-items: center; gap: 8px;
+    margin: 18px 0 8px; font-size: 12px; font-weight: 700; color: #0f4c81;
+  }
+  .screen-label .lv {
+    font-size: 10.5px; font-weight: 700; color: #0f4c81;
+    background: #dbe9f7; border-radius: 4px; padding: 2px 7px;
+  }
+  .screen-label .memo { font-weight: 400; color: #94a3b8; font-size: 11.5px; }
+  .screen {
+    background: #e8edf3; border-radius: 10px; padding: 14px;
+  }
+  .carousel {
+    display: flex; gap: 8px; overflow-x: auto;
+    padding-bottom: 6px; -webkit-overflow-scrolling: touch;
+  }
+  .cara-card {
+    flex: none; width: 208px;
+    background: #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06);
+    display: flex; flex-direction: column;
+  }
+  .cara-top {
+    background: #0f4c81; color: #fff;
+    padding: 10px 12px; font-size: 13px; font-weight: 700; line-height: 1.4;
+  }
+  .cara-top .cara-no {
+    display: block; font-size: 10px; font-weight: 600;
+    color: #a9c6e4; letter-spacing: .08em; margin-bottom: 2px;
+  }
+  .cara-list {
+    padding: 10px 12px 12px; flex: 1;
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .cara-list li {
+    list-style: none; font-size: 11.5px; line-height: 1.55; color: #475569;
+    padding-left: 11px; position: relative;
+  }
+  .cara-list li::before {
+    content: ''; position: absolute; left: 0; top: 7px;
+    width: 4px; height: 4px; border-radius: 50%; background: #93b4d4;
+  }
+  .cara-btn {
+    border-top: 1px solid #f1f5f9; padding: 9px;
+    text-align: center; font-size: 12px; font-weight: 600; color: #0f4c81;
+  }
+  .cara-hint {
+    margin-top: 8px; font-size: 11px; color: #64748b; text-align: center;
+  }
+  .qr-chips {
+    display: flex; gap: 6px; overflow-x: auto; margin-top: 10px; padding-bottom: 4px;
+  }
+  .qr-chip {
+    flex: none; background: #fff; color: #0f4c81;
+    border: 1px solid #0f4c81; border-radius: 16px;
+    padding: 6px 13px; font-size: 12px; font-weight: 500; white-space: nowrap;
+  }
+  .qr-chip.gray { color: #64748b; border-color: #cbd5e1; }
+
   .source {
     margin-top: 10px; font-size: 11.5px; color: #64748b;
     border-left: 3px solid #cbd5e1; padding-left: 10px; line-height: 1.7;
@@ -213,6 +273,57 @@
           <span class="flow-step-txt"><b>回答テキスト＋ボタン</b><br><span>「診察予約する」「ほかの質問を見る」を添えて、そのまま予約へ</span></span>
         </div>
       </div>
+
+      <div class="screen-label"><span class="lv">1階層</span>カテゴリを選ぶ画面<span class="memo">カルーセル／横にスワイプして3枚</span></div>
+      <div class="screen">
+        <div class="msg-bubble" style="max-width:100%;">ご質問の内容を選んでください。</div>
+        <div class="carousel">
+          <div class="cara-card">
+            <div class="cara-top"><span class="cara-no">CATEGORY 01</span>受診・ご予約</div>
+            <ul class="cara-list">
+              <li>予約はどこからできる？</li>
+              <li>受診の流れ</li>
+              <li>自費診療も予約が必要？</li>
+            </ul>
+            <div class="cara-btn">この中から選ぶ</div>
+          </div>
+          <div class="cara-card">
+            <div class="cara-top"><span class="cara-no">CATEGORY 02</span>診察時間・アクセス</div>
+            <ul class="cara-list">
+              <li>診察時間・休診日</li>
+              <li>場所・行き方</li>
+              <li>駐車場はある？</li>
+            </ul>
+            <div class="cara-btn">この中から選ぶ</div>
+          </div>
+          <div class="cara-card">
+            <div class="cara-top"><span class="cara-no">CATEGORY 03</span>診療内容・<br>オンライン診療</div>
+            <ul class="cara-list">
+              <li>どんな症状で受診できる？</li>
+              <li>健診で異常を指摘された</li>
+              <li>自費診療のメニュー</li>
+              <li>オンライン診療は受けられる？</li>
+            </ul>
+            <div class="cara-btn">この中から選ぶ</div>
+          </div>
+        </div>
+        <div class="cara-hint">← 横にスワイプ →</div>
+      </div>
+
+      <div class="screen-label"><span class="lv">2階層</span>質問を選ぶ画面<span class="memo">クイックリプライ／「受診・ご予約」を選んだ場合</span></div>
+      <div class="screen">
+        <div class="msg-bubble" style="max-width:100%;">受診・ご予約について、知りたいことをお選びください。</div>
+        <div class="qr-chips">
+          <span class="qr-chip">予約はどこから？</span>
+          <span class="qr-chip">受診の流れ</span>
+          <span class="qr-chip">自費も予約が必要？</span>
+          <span class="qr-chip gray">ほかのカテゴリへ</span>
+        </div>
+      </div>
+      <div class="cara-hint" style="text-align:left;margin-top:6px;">
+        質問をタップすると、下のQ1〜Q10の回答が届きます。
+      </div>
+
       <div class="note-box">
         個別の症状相談（「この症状は受診すべきか」など）はQ&amp;Aでは回答せず、「診察でご相談ください」と受診案内に寄せる方針です。
       </div>
