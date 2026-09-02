@@ -6,7 +6,7 @@
     ※カルーセル不要。LINEのボタンテンプレート（最大4つ）1通で完結する形
   - 回答4問はすべて公式サイト記載の内容のみ（出典を明記）→ 先方確認なしで実装可能
   - 一覧にない質問はトークへ送っていただく案内を初回メッセージに記載
-  - 先方確認は1件（トークに届いた質問の返信運用）のみ
+  - 先方確認なしで実装できる構成
   - 今後の追加候補（届いた質問を見てから、必要なものだけ・要クリニック確認）：
     1) 予約なしで来院された場合の対応 2) 初診の持ち物
     3) オンライン診療の受付時間・初診可否・薬の受け取り 4) 支払い方法
@@ -162,18 +162,6 @@
   }
   .note-box.plain { background: #f8fafc; border-color: #e2e8f0; color: #475569; }
 
-  /* 確認事項 */
-  .ask-hint { font-size: 12.5px; color: #64748b; line-height: 1.75; margin-bottom: 10px; }
-  .ask-input {
-    width: 100%; min-height: 70px;
-    border: 1px solid #fcd34d; border-radius: 8px; padding: 10px 12px;
-    font-family: 'Noto Sans JP', sans-serif; font-size: 13px; line-height: 1.7;
-    color: #1a1a2e; background: #fffdf5; resize: vertical; outline: none;
-  }
-  .ask-input:focus { border-color: #f59e0b; background: #fff; }
-  .ask-status { font-size: 11px; color: #94a3b8; margin-top: 4px; min-height: 16px; }
-  .ask-status.saved { color: #22c55e; }
-
 </style>
 </head>
 <body>
@@ -213,7 +201,7 @@
         </div>
         <div class="flow-step-row">
           <span class="flow-step-no">その他</span>
-          <span class="flow-step-txt"><b>一覧にない質問は、トークにそのまま送っていただく</b><br><span>初回メッセージでご案内。届いたご質問は有人でご返信（下の確認事項）</span></span>
+          <span class="flow-step-txt"><b>一覧にない質問は、トークにそのまま送っていただく</b><br><span>初回メッセージでご案内。届いたご質問はスタッフの方からご返信</span></span>
         </div>
       </div>
 
@@ -345,48 +333,12 @@
     </div>
   </div>
 
-  <div class="section-title"><span class="cat-no" style="background:#f59e0b;">確認</span>先方確認事項<span class="cat-count">1件</span></div>
-
-  <div class="step">
-    <div class="card card-border-orange">
-      <div class="card-header">
-        <span class="card-day warn">確認</span>
-        <span class="card-title">トークに直接届いたご質問には、どなたがご返信されますか？</span>
-      </div>
-      <div class="card-body">
-        <div class="ask-hint">一覧にない質問は、そのままトークに送っていただく案内を入れています。ご返信の担当者と、お返事できる時間帯をお教えください（例：診療時間内に順次）。診療時間外に届いた場合の自動応答文もご用意します。<br>この1点さえ決まれば、Q&amp;Aは公開できます。</div>
-        <textarea class="ask-input" data-key="ushigome-faq-reply" placeholder="例：受付スタッフが診療時間内に順次返信..." oninput="saveAnswer(this)"></textarea>
-        <div class="ask-status"></div>
-      </div>
-    </div>
-  </div>
-
   <div class="note-box plain" style="margin-top:18px;">
     このほかの質問（当日受診の可否、初診の持ち物、オンライン診療の運用など）は、実際にトークへ届いたものを見ながら足していきます。今は決めなくて大丈夫です。
   </div>
 
 </div>
 
-<script>
-let saveTimer = null;
-function saveAnswer(textarea) {
-  const key = textarea.dataset.key;
-  const status = textarea.nextElementSibling;
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    localStorage.setItem(key, textarea.value);
-    status.textContent = '保存しました';
-    status.className = 'ask-status saved';
-    setTimeout(() => { status.textContent = ''; status.className = 'ask-status'; }, 2000);
-  }, 500);
-}
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.ask-input').forEach(ta => {
-    const saved = localStorage.getItem(ta.dataset.key);
-    if (saved) ta.value = saved;
-  });
-});
-</script>
 
 </body>
 </html>
