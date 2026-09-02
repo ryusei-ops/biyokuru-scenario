@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <!--
   === 牛込内科・糖尿病クリニック 公式LINE よくある質問（Q&A）案 ===
-  [2026-09-02] v2 ／ 必要最低限に絞った構成
-  - 導線：リッチメニュー「よくある質問」→ カルーセル2枚（3ボタン×2）→ 回答
-    ※カルーセルは全カードでボタン数を揃える必要があるため3つずつ
-  - 回答6問はすべて公式サイト記載の内容のみ（出典を明記）→ 先方確認なしで実装可能
+  [2026-09-02] v3
+  - 導線：リッチメニュー「よくある質問」→ カルーセル4枚（3ボタン×4）→ 回答
+    ※カルーセルは全カードでボタン数を揃える必要があるため3つずつ／最大10カードまで拡張可
+  - 回答12問はすべて公式サイト記載の内容のみ（出典を明記）→ 先方確認なしで実装可能
   - 一覧にない質問はトークへ送っていただく案内を初回メッセージに記載
-  - 先方確認なしで実装できる構成
-  - 今後の追加候補（届いた質問を見てから、必要なものだけ・要クリニック確認）：
-    1) 予約なしで来院された場合の対応 2) 初診の持ち物
-    3) オンライン診療の受付時間・初診可否・薬の受け取り 4) 支払い方法
-    5) 予約の変更・キャンセル 6) 自費診療の料金をLINEに載せるか
 -->
 <html lang="ja">
 <head>
@@ -90,7 +85,6 @@
     overflow: hidden;
   }
   .card-border-blue { border-left: 4px solid #3b82f6; }
-  .card-border-orange { border-left: 4px solid #f59e0b; }
   .card-header {
     display: flex; align-items: center; gap: 12px;
     padding: 16px 20px 12px;
@@ -100,7 +94,6 @@
     font-size: 12px; font-weight: 700; color: #fff;
     background: #1a1a2e; padding: 3px 10px; border-radius: 6px; white-space: nowrap;
   }
-  .card-day.warn { background: #f59e0b; }
   .card-title { font-size: 15px; font-weight: 600; flex: 1; line-height: 1.5; }
   .card-body { padding: 16px 20px 20px; }
 
@@ -147,7 +140,7 @@
     margin-top: 8px; padding-bottom: 6px; -webkit-overflow-scrolling: touch;
   }
   .cara-card {
-    flex: none; width: 224px;
+    flex: none; width: 214px;
     background: #fff; border-radius: 10px; overflow: hidden;
     box-shadow: 0 1px 2px rgba(0,0,0,.06);
     display: flex; flex-direction: column;
@@ -181,22 +174,21 @@
     border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.75; color: #92400e;
   }
   .note-box.plain { background: #f8fafc; border-color: #e2e8f0; color: #475569; }
-
 </style>
 </head>
 <body>
 
 <div class="page-header">
   <h1>公式LINE よくある質問（Q&amp;A）案</h1>
-  <p>牛込内科・糖尿病クリニック｜6問、カルーセル2枚で完結する形</p>
-  <span class="draft-badge">v2 2026-09-02 ｜ 最小構成</span>
+  <p>牛込内科・糖尿病クリニック｜12問、カルーセル4枚で完結する形</p>
+  <span class="draft-badge">v3 2026-09-02</span>
 </div>
 
 <div class="lead-box">
   <div class="lead-title">この資料の見かた</div>
   <div>
-    はじめは<b>6問だけ</b>で立ち上げる案です。回答は<b>公式サイトに記載がある内容だけ</b>で作っているため、<b>確認待ちなしでそのまま実装できます</b>。<br>
-    一覧にない質問はトークに直接送っていただく形にしているので、実際に届いた質問を見てから増やしていけます。
+    <b>12問</b>で立ち上げる案です。回答は<b>公式サイトに記載がある内容だけ</b>で作っているため、<b>確認待ちなしでそのまま実装できます</b>。<br>
+    一覧にない質問はトークに直接送っていただく形にしているので、実際に届いた質問を見てから足していけます。
   </div>
 </div>
 
@@ -205,7 +197,7 @@
   <div class="overview">
     <div class="overview-head">配信の仕組み</div>
     <div class="overview-body">
-      階層分けはしません。<b>カルーセル2枚</b>で完結します（1カードにボタン3つ／全カードで数を揃える必要があるため3つずつ）。
+      階層分けはしません。<b>カルーセル4枚</b>で完結します（1カードにボタン3つ／全カードで数を揃える必要があるため3つずつ）。
       <div class="flow-steps">
         <div class="flow-step-row">
           <span class="flow-step-no">入口</span>
@@ -213,7 +205,7 @@
         </div>
         <div class="flow-step-row">
           <span class="flow-step-no">選択</span>
-          <span class="flow-step-txt"><b>カード2枚に、質問を3つずつ配置</b><br><span>質問がそのままボタン。1タップで回答が届きます</span></span>
+          <span class="flow-step-txt"><b>カード4枚に、質問を3つずつ配置</b><br><span>質問がそのままボタン。1タップで回答が届きます</span></span>
         </div>
         <div class="flow-step-row">
           <span class="flow-step-no">回答</span>
@@ -225,28 +217,46 @@
         </div>
       </div>
 
-      <div class="screen-label"><span class="lv">画面</span>「よくある質問」をタップした直後<span class="memo">カルーセル2枚</span></div>
+      <div class="screen-label"><span class="lv">画面</span>「よくある質問」をタップした直後<span class="memo">カルーセル4枚</span></div>
       <div class="screen">
         <div class="msg-bubble" style="max-width:100%;">お知りになりたいことをお選びください。
 
 一覧にない内容は、そのままこのトークにご質問をお送りください。</div>
         <div class="carousel">
           <div class="cara-card">
-            <div class="cara-top"><span class="cara-no">CARD 01</span>受診の前に</div>
-            <div class="cara-desc">診察時間、場所、ご予約について</div>
+            <div class="cara-top"><span class="cara-no">CARD 01</span>受診・ご予約</div>
+            <div class="cara-desc">ご予約の方法と、受診までの流れ</div>
             <div class="cara-btns">
-              <div class="cara-btn">診察時間・休診日</div>
-              <div class="cara-btn">場所・駐車場</div>
               <div class="cara-btn">予約の方法</div>
+              <div class="cara-btn">受診の流れ</div>
+              <div class="cara-btn">自費も予約が必要？</div>
             </div>
           </div>
           <div class="cara-card">
-            <div class="cara-top"><span class="cara-no">CARD 02</span>診療内容</div>
-            <div class="cara-desc">診ている症状と、自費診療・オンライン診療</div>
+            <div class="cara-top"><span class="cara-no">CARD 02</span>診察時間・アクセス</div>
+            <div class="cara-desc">診察時間、場所、駐車場について</div>
+            <div class="cara-btns">
+              <div class="cara-btn">診察時間・休診日</div>
+              <div class="cara-btn">場所・行き方</div>
+              <div class="cara-btn">駐車場について</div>
+            </div>
+          </div>
+          <div class="cara-card">
+            <div class="cara-top"><span class="cara-no">CARD 03</span>診療内容</div>
+            <div class="cara-desc">診ている症状と、専門的な治療</div>
             <div class="cara-btns">
               <div class="cara-btn">診てもらえる症状</div>
+              <div class="cara-btn">糖尿病・生活習慣病</div>
+              <div class="cara-btn">健診で異常が出た</div>
+            </div>
+          </div>
+          <div class="cara-card">
+            <div class="cara-top"><span class="cara-no">CARD 04</span>自費診療・その他</div>
+            <div class="cara-desc">自費メニュー、オンライン診療、医師</div>
+            <div class="cara-btns">
               <div class="cara-btn">自費診療のメニュー</div>
               <div class="cara-btn">オンライン診療</div>
+              <div class="cara-btn">医師について</div>
             </div>
           </div>
         </div>
@@ -254,7 +264,7 @@
       </div>
 
       <div class="note-box plain">
-        <b>実装するもの</b>：リッチメニューのボタン1つ ＋ 上のカルーセル1通 ＋ 回答6通。以上です。
+        <b>実装するもの</b>：リッチメニューのボタン1つ ＋ 上のカルーセル1通 ＋ 回答12通。以上です。
       </div>
       <div class="note-box">
         個別の症状相談（「この症状は受診すべきか」など）はQ&amp;Aでは回答せず、「診察でご相談ください」と受診案内に寄せる方針です。
@@ -262,12 +272,84 @@
     </div>
   </div>
 
-  <div class="section-title"><span class="cat-no">回答</span>6問の文面<span class="cat-count">すべてHP記載の内容</span></div>
+  <div class="section-title"><span class="cat-no">01</span>受診・ご予約<span class="cat-count">3問</span></div>
 
   <div class="step">
     <div class="card card-border-blue">
       <div class="card-header">
         <span class="card-day">Q1</span>
+        <span class="card-title">予約の方法</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">メニュー右上の「保険診療」から、ご予約ページへ進めます。
+自費診療のご予約は「自費診療」からお進みください。
+
+ご予約後のご案内、診察開始のご連絡、お支払い・領収書のご案内は、すべてこのLINEでお送りします。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">保険診療を予約する</div>
+              <div class="msg-btn sec">自費診療を予約する</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト「受診の流れ」（LINE登録 → リッチメニュー右上「保険診療」→ 予約ページ）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q2</span>
+        <span class="card-title">受診の流れ</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">01　当院の公式LINEを友だち追加
+02　メニューから予約ページへ進む
+03　ご希望の診療メニューと日時を選択
+04　お名前・ご連絡先・資格確認証を登録
+
+ご予約のお時間になりましたら、診察を開始いたします。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">診察予約する</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト「受診の流れ」01〜04</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q3</span>
+        <span class="card-title">自費も予約が必要？</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">自費診療は完全予約制です。
+ご希望のメニューを選んで、ご予約をお取りください。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">自費診療を予約する</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト 診察時間欄の注記「自費診療は完全予約制です。」</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title"><span class="cat-no">02</span>診察時間・アクセス<span class="cat-count">3問</span></div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q4</span>
         <span class="card-title">診察時間・休診日</span>
       </div>
       <div class="card-body">
@@ -293,8 +375,8 @@
   <div class="step">
     <div class="card card-border-blue">
       <div class="card-header">
-        <span class="card-day">Q2</span>
-        <span class="card-title">場所・駐車場</span>
+        <span class="card-day">Q5</span>
+        <span class="card-title">場所・行き方</span>
       </div>
       <div class="card-body">
         <div class="msg-preview">
@@ -302,17 +384,15 @@
 
 〒162-0063
 東京都新宿区市谷薬王寺町14-17
-アルス市ヶ谷薬王寺101
-
-当院に駐車場はございません。お近くのコインパーキングをご利用ください。
-なお、開院前にお並びいただくことはお控えください。</div>
+アルス市ヶ谷薬王寺101</div>
           <div class="msg-bubble">
             <div class="msg-btns">
               <div class="msg-btn sec">地図を見る</div>
+              <div class="msg-btn">診察予約する</div>
             </div>
           </div>
         </div>
-        <div class="source">出典：公式サイト「アクセス」＋注記2点／サイトタイトル「牛込柳町駅 徒歩2分」</div>
+        <div class="source">出典：公式サイト「アクセス」／サイトタイトル「牛込柳町駅 徒歩2分」</div>
       </div>
     </div>
   </div>
@@ -320,40 +400,34 @@
   <div class="step">
     <div class="card card-border-blue">
       <div class="card-header">
-        <span class="card-day">Q3</span>
-        <span class="card-title">予約の方法</span>
+        <span class="card-day">Q6</span>
+        <span class="card-title">駐車場について</span>
       </div>
       <div class="card-body">
         <div class="msg-preview">
-          <div class="msg-bubble">メニュー右上の「保険診療」から、ご予約ページへ進めます。
-自費診療のご予約は「自費診療」からお進みください。（自費診療は完全予約制です）
+          <div class="msg-bubble">当院に駐車場はございません。
+お近くのコインパーキングをご利用ください。
 
-ご希望の診療メニューと日時を選び、お名前・ご連絡先・資格確認証をご登録ください。
-
-ご予約後のご案内、診察開始のご連絡、お支払い・領収書のご案内は、すべてこのLINEでお送りします。</div>
-          <div class="msg-bubble">
-            <div class="msg-btns">
-              <div class="msg-btn">保険診療を予約する</div>
-              <div class="msg-btn sec">自費診療を予約する</div>
-            </div>
-          </div>
+なお、開院前にお並びいただくことはお控えください。</div>
         </div>
-        <div class="source">出典：公式サイト「受診の流れ」01〜04／診察時間欄の注記「自費診療は完全予約制です。」</div>
+        <div class="source">出典：公式サイト「アクセス」注記2点をそのまま反映</div>
       </div>
     </div>
   </div>
 
+  <div class="section-title"><span class="cat-no">03</span>診療内容<span class="cat-count">3問</span></div>
+
   <div class="step">
     <div class="card card-border-blue">
       <div class="card-header">
-        <span class="card-day">Q4</span>
+        <span class="card-day">Q7</span>
         <span class="card-title">診てもらえる症状</span>
       </div>
       <div class="card-body">
         <div class="msg-preview">
           <div class="msg-bubble">風邪、発熱、咳、のどの痛み、胃痛・胃もたれ、下痢、便秘、頭痛など、一般内科全般に対応しております。
 
-糖尿病・高血圧・脂質異常症などの生活習慣病、甲状腺・副腎・下垂体などホルモンの病気も、専門的に診療しております。健康診断で指摘された血圧・血糖値・脂質・尿酸値・肝機能などの再検査もお任せください。
+また、甲状腺・副腎・下垂体などホルモンの病気も、専門的に診療しております。動悸、疲労感、体重の変化、原因のわからない体調不良なども、背景にホルモンの異常が隠れていることがあります。
 
 症状がひどくなる前に、お早めにご相談ください。</div>
           <div class="msg-bubble">
@@ -363,7 +437,7 @@
             </div>
           </div>
         </div>
-        <div class="source">出典：公式サイト「保険診療」一般内科・生活習慣病・甲状腺／副腎／下垂体疾患・健康診断異常フォローの説明文</div>
+        <div class="source">出典：公式サイト「保険診療」一般内科／甲状腺疾患／副腎疾患／下垂体疾患の説明文</div>
       </div>
     </div>
   </div>
@@ -371,7 +445,55 @@
   <div class="step">
     <div class="card card-border-blue">
       <div class="card-header">
-        <span class="card-day">Q5</span>
+        <span class="card-day">Q8</span>
+        <span class="card-title">糖尿病・生活習慣病</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">生活習慣病は、自覚症状が少ないまま進行し、心筋梗塞や脳卒中など重大な病気につながることがあります。
+
+糖尿病、高血圧、脂質異常症について、生活習慣の改善、薬物療法、継続的な管理を通じて、将来のリスクを減らすお手伝いをいたします。
+
+糖尿病内科・内分泌代謝の専門医が診療にあたります。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">診察予約する</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト「保険診療 ＞ 生活習慣病」／「医師紹介」の専門科目（内分泌代謝・糖尿病内科専門医）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q9</span>
+        <span class="card-title">健診で異常が出た</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">血圧、血糖値、脂質、尿酸値、肝機能の異常など、健康診断で指摘された項目の精査・管理を行っております。
+
+放置せず早めに対応することで、将来的な病気の予防につながります。健診の結果をお持ちのうえ、ご来院ください。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">診察予約する</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト「保険診療 ＞ 健康診断異常フォロー」</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title"><span class="cat-no">04</span>自費診療・その他<span class="cat-count">3問</span></div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q10</span>
         <span class="card-title">自費診療のメニュー</span>
       </div>
       <div class="card-body">
@@ -400,7 +522,7 @@
   <div class="step">
     <div class="card card-border-blue">
       <div class="card-header">
-        <span class="card-day">Q6</span>
+        <span class="card-day">Q11</span>
         <span class="card-title">オンライン診療</span>
       </div>
       <div class="card-body">
@@ -419,12 +541,34 @@
     </div>
   </div>
 
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q12</span>
+        <span class="card-title">医師について</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">院長の石川 透が、月曜から金曜まで診療にあたります。
+日本内分泌学会専門医、内科認定医、難病指定医、医学博士。
+
+このほか、内分泌代謝・糖尿病内科専門医、産業医が非常勤で在籍しております。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn sec">当院についてのページを見る</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト「医師紹介」（石川 透／長谷川 大輔／盛永 大夏の専門科目・勤務曜日）</div>
+      </div>
+    </div>
+  </div>
+
   <div class="note-box plain" style="margin-top:18px;">
-    このほかの質問（当日受診の可否、初診の持ち物、オンライン診療の運用など）は、実際にトークへ届いたものを見ながら足していきます。今は決めなくて大丈夫です。
+    このほかの質問（当日受診の可否、初診の持ち物、支払い方法、オンライン診療の受付時間など）は、サイトに記載がないため入れていません。実際にトークへ届いたものを見ながら、必要なものだけクリニックに確認して足していきます。カルーセルは10枚まで増やせます。
   </div>
 
 </div>
-
 
 </body>
 </html>
