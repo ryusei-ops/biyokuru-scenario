@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<!--
+  === 牛込内科・糖尿病クリニック 公式LINE よくある質問（Q&A）案 ===
+  [2026-09-02] v1
+  - 導線は2階層：リッチメニュー「よくある質問」→ カテゴリ3つ（カルーセル）→ 質問（クイックリプライ）→ 回答
+  - 掲載しているQ&Aは、公式サイトに記載がある内容のみ（出典を各回答に明記）
+  - サイトに記載がなく、患者さんからよく聞かれる項目は「先方確認事項」に分離
+    → 各項目の入力欄にご回答をご記入 → 「確認事項の回答をコピー」で大石へ共有 → Q&Aに追加
+-->
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>牛込内科 公式LINE よくある質問（Q&A）案</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f5f7fa;
+    color: #1a1a2e;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page-header {
+    background: linear-gradient(135deg, #0f4c81 0%, #16213e 100%);
+    color: #fff;
+    padding: 40px 20px 32px;
+    text-align: center;
+  }
+  .page-header h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .page-header p { font-size: 13px; color: #a0aec0; }
+  .draft-badge {
+    display: inline-block; margin-top: 10px;
+    font-size: 12px; font-weight: 700; color: #92400e;
+    background: #fef3c7; border: 1px solid #fde68a;
+    padding: 3px 14px; border-radius: 14px;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  /* 概要 */
+  .overview {
+    margin-bottom: 28px; border: 2px solid #0f4c81; border-radius: 12px;
+    background: #f2f7fc; overflow: hidden;
+  }
+  .overview-head { background: #0f4c81; color: #fff; padding: 10px 16px; font-size: 13px; font-weight: 700; }
+  .overview-body { padding: 14px 16px 16px; font-size: 13px; line-height: 1.8; color: #334155; }
+  .flow-steps { display: flex; flex-direction: column; gap: 6px; margin: 10px 0 4px; }
+  .flow-step-row { display: flex; gap: 10px; align-items: flex-start; }
+  .flow-step-no {
+    flex: none; width: 62px; text-align: center;
+    font-size: 11px; font-weight: 700; color: #0f4c81;
+    background: #dbe9f7; border-radius: 5px; padding: 3px 0; margin-top: 2px;
+  }
+  .flow-step-txt { font-size: 13px; line-height: 1.75; }
+  .flow-step-txt b { font-weight: 700; }
+  .flow-step-txt span { color: #64748b; font-size: 12px; }
+
+  /* セクション見出し */
+  .section-title {
+    display: flex; align-items: center; gap: 10px;
+    margin: 32px 0 14px; font-size: 16px; font-weight: 700; color: #1a1a2e;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+  .section-title .cat-no {
+    font-size: 12px; font-weight: 700; color: #fff;
+    background: #0f4c81; padding: 2px 9px; border-radius: 5px;
+  }
+  .section-title .cat-count { font-size: 12px; font-weight: 500; color: #94a3b8; }
+
+  /* カード */
+  .step { margin-bottom: 12px; scroll-margin-top: 40px; }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04);
+    overflow: hidden;
+  }
+  .card-border-blue { border-left: 4px solid #3b82f6; }
+  .card-border-orange { border-left: 4px solid #f59e0b; }
+  .card-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .card-day {
+    font-size: 12px; font-weight: 700; color: #fff;
+    background: #1a1a2e; padding: 3px 10px; border-radius: 6px; white-space: nowrap;
+  }
+  .card-day.warn { background: #f59e0b; }
+  .card-title { font-size: 15px; font-weight: 600; flex: 1; line-height: 1.5; }
+  .card-body { padding: 16px 20px 20px; }
+  .card-trigger { font-size: 11px; color: #94a3b8; margin-bottom: 10px; }
+
+  /* LINEプレビュー */
+  .msg-preview {
+    background: #e8edf3;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 10px 0;
+  }
+  .msg-bubble {
+    background: #fff;
+    border-radius: 0 12px 12px 12px;
+    padding: 12px 14px;
+    max-width: 90%;
+    font-size: 13px;
+    line-height: 1.8;
+    white-space: pre-line;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .msg-bubble:last-child { margin-bottom: 0; }
+  .msg-btns { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+  .msg-btn {
+    display: block; text-align: center; padding: 8px;
+    border-radius: 6px; font-size: 13px; font-weight: 600;
+    color: #fff; background: #0f4c81;
+  }
+  .msg-btn.sec { background: #fff; color: #0f4c81; border: 2px solid #0f4c81; }
+  .msg-btn.gray { background: #94a3b8; }
+
+  .source {
+    margin-top: 10px; font-size: 11.5px; color: #64748b;
+    border-left: 3px solid #cbd5e1; padding-left: 10px; line-height: 1.7;
+  }
+  .note-box {
+    margin-top: 12px; background: #fffbeb; border: 1px solid #fde68a;
+    border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.75; color: #92400e;
+  }
+
+  /* 確認事項 */
+  .ask-intro {
+    margin: 10px 0 16px; padding: 14px 16px;
+    background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px;
+    font-size: 13px; line-height: 1.8; color: #92400e;
+  }
+  .ask-intro b { font-weight: 700; }
+  .ask-hint { font-size: 12.5px; color: #64748b; line-height: 1.75; margin-bottom: 10px; }
+  .ask-input {
+    width: 100%; min-height: 70px;
+    border: 1px solid #fcd34d; border-radius: 8px; padding: 10px 12px;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 13px; line-height: 1.7;
+    color: #1a1a2e; background: #fffdf5; resize: vertical; outline: none;
+  }
+  .ask-input:focus { border-color: #f59e0b; background: #fff; }
+  .ask-status { font-size: 11px; color: #94a3b8; margin-top: 4px; min-height: 16px; }
+  .ask-status.saved { color: #22c55e; }
+
+  .export-bar {
+    display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+    padding: 12px 20px; background: #fff; border-bottom: 1px solid #e2e8f0;
+  }
+  .export-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #b45309;
+    background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px;
+    padding: 6px 14px; cursor: pointer;
+  }
+  .export-btn:hover { background: #fef3c7; }
+  .export-btn.danger { color: #ef4444; background: #fef2f2; border-color: #fecaca; }
+  .lead-box {
+    max-width: 720px; margin: 16px auto 0; padding: 16px 20px;
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+    font-size: 13px; line-height: 1.8; color: #475569;
+  }
+  .lead-box .lead-title { font-weight: 700; color: #1a1a2e; margin-bottom: 6px; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>公式LINE よくある質問（Q&amp;A）案</h1>
+  <p>牛込内科・糖尿病クリニック｜メニューから質問を選ぶと、回答が届く形</p>
+  <span class="draft-badge">初稿 2026-09-02</span>
+</div>
+
+<div class="lead-box">
+  <div class="lead-title">この資料の見かた</div>
+  <div>
+    前半は<b>そのまま配信できるQ&amp;A（10問）</b>です。回答は<b>公式サイトに記載がある内容だけ</b>で作成し、各回答に出典を添えています。<br>
+    後半は<b>サイトに記載がなく、患者さんからよく聞かれる項目（8件）</b>です。入力欄にご回答をご記入いただき、最後に「確認事項の回答をコピー」を押して大石までご共有ください。いただいた内容をQ&amp;Aに追加します。
+  </div>
+</div>
+
+<div class="export-bar">
+  <button class="export-btn" onclick="exportAnswers()">確認事項の回答をコピー</button>
+  <button class="export-btn danger" onclick="clearAllAnswers()">入力をすべてクリア</button>
+</div>
+
+<div class="container">
+
+  <div class="overview">
+    <div class="overview-head">配信の仕組み</div>
+    <div class="overview-body">
+      質問を一度に並べると画面に収まらないため、<b>カテゴリ → 質問 → 回答</b>の2階層にします。
+      <div class="flow-steps">
+        <div class="flow-step-row">
+          <span class="flow-step-no">入口</span>
+          <span class="flow-step-txt"><b>リッチメニュー「よくある質問」</b>をタップ<br><span>「駐車場」「診察時間」などのキーワード応答も裏で登録し、自由入力にも対応</span></span>
+        </div>
+        <div class="flow-step-row">
+          <span class="flow-step-no">1階層</span>
+          <span class="flow-step-txt"><b>カテゴリを3つ提示</b>（カルーセル）<br><span>受診・ご予約／診察時間・アクセス／診療内容・オンライン診療</span></span>
+        </div>
+        <div class="flow-step-row">
+          <span class="flow-step-no">2階層</span>
+          <span class="flow-step-txt"><b>そのカテゴリの質問を3〜4個提示</b>（クイックリプライ）<br><span>画面を占有せず、最大13個まで並べられる形式</span></span>
+        </div>
+        <div class="flow-step-row">
+          <span class="flow-step-no">回答</span>
+          <span class="flow-step-txt"><b>回答テキスト＋ボタン</b><br><span>「診察予約する」「ほかの質問を見る」を添えて、そのまま予約へ</span></span>
+        </div>
+      </div>
+      <div class="note-box">
+        個別の症状相談（「この症状は受診すべきか」など）はQ&amp;Aでは回答せず、「診察でご相談ください」と受診案内に寄せる方針です。
+      </div>
+    </div>
+  </div>
+
+  <!-- ① 受診・ご予約 -->
+  <div class="section-title"><span class="cat-no">01</span>受診・ご予約<span class="cat-count">3問</span></div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q1</span>
+        <span class="card-title">予約はどこからできますか？</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">メニュー右上の「保険診療」から、ご予約ページへ進めます。
+自費診療のご予約は「自費診療」からお進みください。
+
+ご予約後のご案内、診察開始のご連絡、お支払い・領収書のご案内は、すべてこのLINEでお送りします。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">保険診療を予約する</div>
+              <div class="msg-btn sec">自費診療を予約する</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト「受診の流れ」（LINE登録 → リッチメニュー右上「保険診療」→ 予約ページ）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q2</span>
+        <span class="card-title">受診の流れを教えてください</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">01　当院の公式LINEを友だち追加
+02　メニューから予約ページへ進む
+03　ご希望の診療メニューと日時を選択
+04　お名前・ご連絡先・資格確認証を登録
+
+ご予約のお時間になりましたら、診察を開始いたします。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">診察予約する</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト「受診の流れ」01〜04</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q3</span>
+        <span class="card-title">自費診療も予約が必要ですか？</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">自費診療は完全予約制です。
+ご希望のメニューを選んで、ご予約をお取りください。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">自費診療を予約する</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト 診察時間欄の注記「自費診療は完全予約制です。」</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② 診察時間・アクセス -->
+  <div class="section-title"><span class="cat-no">02</span>診察時間・アクセス<span class="cat-count">3問</span></div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q4</span>
+        <span class="card-title">診察時間・休診日を教えてください</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">【診察時間】月〜金
+午前　10:00〜13:00（受付は12:30まで）
+午後　14:00〜18:30（受付は18:00まで）
+
+【休診日】土曜・日曜・祝日
+
+受付は診察終了の30分前までとなります。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">診察予約する</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト「診察時間」（月〜金 ⚫︎ ／ 土 −、受付締切 12:30・18:00）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q5</span>
+        <span class="card-title">場所・行き方を教えてください</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">都営大江戸線「牛込柳町駅」から徒歩2分です。
+
+〒162-0063
+東京都新宿区市谷薬王寺町14-17
+アルス市ヶ谷薬王寺101</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn sec">地図を見る</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト「アクセス」／サイトタイトル「牛込柳町駅 徒歩2分」</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q6</span>
+        <span class="card-title">駐車場はありますか？</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">当院に駐車場はございません。
+お近くのコインパーキングをご利用ください。
+
+なお、開院前にお並びいただくことはお控えください。</div>
+        </div>
+        <div class="source">出典：公式サイト「アクセス」注記2点をそのまま反映</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 診療内容 -->
+  <div class="section-title"><span class="cat-no">03</span>診療内容・オンライン診療<span class="cat-count">4問</span></div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q7</span>
+        <span class="card-title">どんな症状で受診できますか？</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">風邪、発熱、咳、のどの痛み、胃痛・胃もたれ、下痢、便秘、頭痛など、一般内科全般に対応しております。
+
+また、糖尿病・高血圧・脂質異常症などの生活習慣病、甲状腺・副腎・下垂体などホルモンの病気も、専門的に診療しております。
+
+症状がひどくなる前に、お早めにご相談ください。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">診察予約する</div>
+              <div class="msg-btn sec">保険診療のページを見る</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト「保険診療」一般内科・生活習慣病・甲状腺疾患・副腎疾患・下垂体疾患の各説明文</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q8</span>
+        <span class="card-title">健康診断で異常を指摘されました</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">血圧、血糖値、脂質、尿酸値、肝機能の異常など、健康診断で指摘された項目の精査・管理を行っております。
+
+放置せず早めに対応することで、将来的な病気の予防につながります。健診の結果をお持ちのうえ、ご来院ください。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">診察予約する</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト「保険診療 ＞ 健康診断異常フォロー」</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q9</span>
+        <span class="card-title">自費診療にはどんなメニューがありますか？</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">主に次のメニューをご用意しております。
+
+・ダイエット、代謝治療
+・男性外来（ED・AGA・LOH症候群）
+・女性外来（FAGA・ピル・更年期）
+・美容、ビタミン点滴、プラセンタ
+・予防医療、検査（持続血糖測定、遺伝子検査など）
+
+自由診療は保険適用外となり、費用は全額自己負担となります。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn sec">自費診療のページを見る</div>
+              <div class="msg-btn">自費診療を予約する</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト「自費診療」5メニューの見出しと注記</div>
+        <div class="note-box">
+          料金はサイトの価格表（ビタミン注射・美容施術）に掲載があります。LINEに金額を直接載せるかは、下の確認事項8でご相談させてください。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-blue">
+      <div class="card-header">
+        <span class="card-day">Q10</span>
+        <span class="card-title">オンライン診療は受けられますか？</span>
+      </div>
+      <div class="card-body">
+        <div class="msg-preview">
+          <div class="msg-bubble">提携するオンライン診療サービス「Biyokuru」でご受診いただけます。
+
+お仕事や子育てで通院の時間が取れない方、出張や旅行で近隣から離れている方も、ご都合に合わせてご利用ください。</div>
+          <div class="msg-bubble">
+            <div class="msg-btns">
+              <div class="msg-btn">オンライン診療について</div>
+            </div>
+          </div>
+        </div>
+        <div class="source">出典：公式サイト「自費診療 ＞ オンライン診療」</div>
+        <div class="note-box">
+          受付時間・対応曜日、初診から受けられるか、お薬の受け取り方法はサイトに記載がないため、確認事項7でお伺いします。回答をいただき次第、オンライン診療の質問を2〜3問追加します。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 確認事項 -->
+  <div class="section-title"><span class="cat-no" style="background:#f59e0b;">確認</span>先方確認事項<span class="cat-count">8件</span></div>
+
+  <div class="ask-intro">
+    <b>ご記入をお願いします。</b>患者さんからよく聞かれる一方、公式サイトに記載がないため回答を作れない項目です。
+    各欄にご回答をご記入いただき、ページ上部の「確認事項の回答をコピー」からテキストをご共有ください。<br>
+    入力内容はご利用の端末に自動保存されますので、途中で閉じても消えません。
+  </div>
+
+  <div class="step">
+    <div class="card card-border-orange">
+      <div class="card-header">
+        <span class="card-day warn">確認1</span>
+        <span class="card-title">予約なしで来院された方は、受診できますか？</span>
+      </div>
+      <div class="card-body">
+        <div class="ask-hint">「当日でも診てもらえますか？」は最も多い質問です。当日枠の有無、予約なしで来られた場合の対応をお教えください。発熱の方の来院時間・動線に決まりがあれば、あわせてご記入ください。</div>
+        <textarea class="ask-input" data-key="ushigome-faq-q1" data-label="確認1 予約なしの当日受診" placeholder="例：当日枠あり。予約なしでも受付可能だが待ち時間が長くなる場合あり..." oninput="saveAnswer(this)"></textarea>
+        <div class="ask-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-orange">
+      <div class="card-header">
+        <span class="card-day warn">確認2</span>
+        <span class="card-title">初診のとき、何をお持ちいただく必要がありますか？</span>
+      </div>
+      <div class="card-body">
+        <div class="ask-hint">健康保険証（マイナ保険証）のほかに、お薬手帳・健診結果・紹介状・医療証など、ご案内したいものをお教えください。マイナ保険証の読み取り機の有無もあわせてお願いします。</div>
+        <textarea class="ask-input" data-key="ushigome-faq-q2" data-label="確認2 初診の持ち物" placeholder="例：保険証（マイナ保険証可）、お薬手帳、健診結果..." oninput="saveAnswer(this)"></textarea>
+        <div class="ask-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-orange">
+      <div class="card-header">
+        <span class="card-day warn">確認3</span>
+        <span class="card-title">予約の変更・キャンセルは、どのように受け付けていますか？</span>
+      </div>
+      <div class="card-body">
+        <div class="ask-hint">予約サイトのマイページから可能か、当日はお電話かなど。受付の期限、自費診療のキャンセル料の有無もお教えください。</div>
+        <textarea class="ask-input" data-key="ushigome-faq-q3" data-label="確認3 予約の変更・キャンセル" placeholder="例：前日までは予約ページから、当日は電話..." oninput="saveAnswer(this)"></textarea>
+        <div class="ask-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-orange">
+      <div class="card-header">
+        <span class="card-day warn">確認4</span>
+        <span class="card-title">お支払い方法は何がご利用いただけますか？</span>
+      </div>
+      <div class="card-body">
+        <div class="ask-hint">予約サイトには「現金またはクレジットカード」の記載がありますが、公式サイトには記載がありません。対応カードブランド、QRコード決済・電子マネーの可否をお教えください。</div>
+        <textarea class="ask-input" data-key="ushigome-faq-q4" data-label="確認4 支払い方法" placeholder="例：現金・クレジットカード（VISA/Master/JCB）、PayPay可..." oninput="saveAnswer(this)"></textarea>
+        <div class="ask-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-orange">
+      <div class="card-header">
+        <span class="card-day warn">確認5</span>
+        <span class="card-title">保険証をお忘れの場合、どのような対応になりますか？</span>
+      </div>
+      <div class="card-body">
+        <div class="ask-hint">いったん自費でお預かりし、後日ご提示で返金という運用が一般的ですが、返金の期限が院ごとに異なります。貴院の運用をお教えください。</div>
+        <textarea class="ask-input" data-key="ushigome-faq-q5" data-label="確認5 保険証を忘れた場合" placeholder="例：全額自費でお預かり、同月内に提示で返金..." oninput="saveAnswer(this)"></textarea>
+        <div class="ask-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-orange">
+      <div class="card-header">
+        <span class="card-day warn">確認6</span>
+        <span class="card-title">お薬だけを受け取りたい、というご要望への対応は？</span>
+      </div>
+      <div class="card-body">
+        <div class="ask-hint">診察が必要な旨をご案内する形でよいか、継続処方をオンライン診療で受けられるか（何回に1回は対面が必要か）をお教えください。</div>
+        <textarea class="ask-input" data-key="ushigome-faq-q6" data-label="確認6 お薬のみの処方" placeholder="例：診察が必要。継続の方はオンライン診療も可..." oninput="saveAnswer(this)"></textarea>
+        <div class="ask-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-orange">
+      <div class="card-header">
+        <span class="card-day warn">確認7</span>
+        <span class="card-title">オンライン診療の受付時間・初診の可否・お薬の受け取り方法</span>
+      </div>
+      <div class="card-body">
+        <div class="ask-hint">3点まとめてお伺いします。①受付時間と対応曜日（予約サイトには「毎日10時〜21時」の記載あり）②初診からオンラインで受けられるか ③お薬は配送か、薬局での受け取りか。送料・お届け日数もあればお願いします。</div>
+        <textarea class="ask-input" data-key="ushigome-faq-q7" data-label="確認7 オンライン診療の運用" placeholder="①受付時間：&#10;②初診の可否：&#10;③お薬の受け取り：" oninput="saveAnswer(this)"></textarea>
+        <div class="ask-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="card card-border-orange">
+      <div class="card-header">
+        <span class="card-day warn">確認8</span>
+        <span class="card-title">自費診療の料金は、LINEでどこまでご案内しますか？</span>
+      </div>
+      <div class="card-body">
+        <div class="ask-hint">「サイトの価格表へ誘導するだけ」か、「主要メニューの金額をLINEにも載せる」か。載せる場合は、対象メニューと金額をお教えください。</div>
+        <textarea class="ask-input" data-key="ushigome-faq-q8" data-label="確認8 自費料金の案内範囲" placeholder="例：サイトの価格表へ誘導のみ／GLP-1と点滴だけ金額を載せる..." oninput="saveAnswer(this)"></textarea>
+        <div class="ask-status"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let saveTimer = null;
+function saveAnswer(textarea) {
+  const key = textarea.dataset.key;
+  const status = textarea.nextElementSibling;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    localStorage.setItem(key, textarea.value);
+    status.textContent = '保存しました';
+    status.className = 'ask-status saved';
+    setTimeout(() => { status.textContent = ''; status.className = 'ask-status'; }, 2000);
+  }, 500);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.ask-input').forEach(ta => {
+    const saved = localStorage.getItem(ta.dataset.key);
+    if (saved) ta.value = saved;
+  });
+});
+function exportAnswers() {
+  const lines = [];
+  document.querySelectorAll('.ask-input').forEach(ta => {
+    const val = ta.value.trim();
+    if (val) lines.push('【' + ta.dataset.label + '】\n' + val);
+  });
+  if (!lines.length) { alert('まだ回答が入力されていません'); return; }
+  const text = '=== 牛込内科 LINE Q&A 確認事項への回答 ===\n\n' + lines.join('\n\n---\n\n');
+  navigator.clipboard.writeText(text).then(() => {
+    alert('回答をコピーしました（' + lines.length + '件）');
+  });
+}
+function clearAllAnswers() {
+  if (!confirm('入力した回答をすべて削除しますか？')) return;
+  document.querySelectorAll('.ask-input').forEach(ta => {
+    ta.value = '';
+    localStorage.removeItem(ta.dataset.key);
+  });
+}
+</script>
+
+</body>
+</html>
