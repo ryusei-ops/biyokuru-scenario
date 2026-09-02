@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <!--
   === 牛込内科・糖尿病クリニック 公式LINE よくある質問（Q&A）案 ===
-  [2026-09-02] v1
-  - 導線：リッチメニュー「よくある質問」→ カルーセル4枚（質問がそのままボタン・3つずつ）→ 回答
-  - 掲載しているQ&Aは、公式サイトに記載がある内容のみ（出典を各回答に明記）
-  - サイトに記載がなく、患者さんからよく聞かれる項目は「先方確認事項」に分離（8件）
-    → 各項目の入力欄にご回答をご記入 → 「確認事項の回答をコピー」で大石へ共有 → Q&Aに追加
+  [2026-09-02] v2 ／ 必要最低限に絞った構成
+  - 導線：リッチメニュー「よくある質問」→ ボタン4つのメッセージ1通 → 回答
+    ※カルーセル不要。LINEのボタンテンプレート（最大4つ）1通で完結する形
+  - 回答4問はすべて公式サイト記載の内容のみ（出典を明記）→ 先方確認なしで実装可能
+  - 一覧にない質問はトークへ送っていただく案内を初回メッセージに記載
+  - 先方確認は1件（トークに届いた質問の返信運用）のみ
 -->
 <html lang="ja">
 <head>
@@ -38,6 +39,13 @@
     padding: 3px 14px; border-radius: 14px;
   }
   .container { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  .lead-box {
+    max-width: 720px; margin: 16px auto 0; padding: 16px 20px;
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+    font-size: 13px; line-height: 1.8; color: #475569;
+  }
+  .lead-box .lead-title { font-weight: 700; color: #1a1a2e; margin-bottom: 6px; font-size: 14px; }
 
   /* 概要 */
   .overview {
@@ -91,7 +99,6 @@
   .card-day.warn { background: #f59e0b; }
   .card-title { font-size: 15px; font-weight: 600; flex: 1; line-height: 1.5; }
   .card-body { padding: 16px 20px 20px; }
-  .card-trigger { font-size: 11px; color: #94a3b8; margin-bottom: 10px; }
 
   /* LINEプレビュー */
   .msg-preview {
@@ -119,11 +126,10 @@
     color: #fff; background: #0f4c81;
   }
   .msg-btn.sec { background: #fff; color: #0f4c81; border: 2px solid #0f4c81; }
-  .msg-btn.gray { background: #94a3b8; }
 
-  /* 画面イメージ（カルーセル・クイックリプライ） */
+  /* 初回メッセージ（ボタンテンプレート）イメージ */
   .screen-label {
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     margin: 18px 0 8px; font-size: 12px; font-weight: 700; color: #0f4c81;
   }
   .screen-label .lv {
@@ -131,40 +137,15 @@
     background: #dbe9f7; border-radius: 4px; padding: 2px 7px;
   }
   .screen-label .memo { font-weight: 400; color: #94a3b8; font-size: 11.5px; }
-  .screen {
-    background: #e8edf3; border-radius: 10px; padding: 14px;
-  }
-  .carousel {
-    display: flex; gap: 8px; overflow-x: auto;
-    padding-bottom: 6px; -webkit-overflow-scrolling: touch;
-  }
-  .cara-card {
-    flex: none; width: 208px;
-    background: #fff; border-radius: 10px; overflow: hidden;
+  .screen { background: #e8edf3; border-radius: 10px; padding: 14px; }
+  .tmpl-card {
+    max-width: 280px; background: #fff; border-radius: 10px; overflow: hidden;
     box-shadow: 0 1px 2px rgba(0,0,0,.06);
-    display: flex; flex-direction: column;
   }
-  .cara-top {
-    background: #0f4c81; color: #fff;
-    padding: 10px 12px; font-size: 13px; font-weight: 700; line-height: 1.4;
-  }
-  .cara-top .cara-no {
-    display: block; font-size: 10px; font-weight: 600;
-    color: #a9c6e4; letter-spacing: .08em; margin-bottom: 2px;
-  }
-  .cara-desc {
-    padding: 9px 12px 10px; flex: 1;
-    font-size: 11.5px; line-height: 1.6; color: #64748b;
-  }
-  .cara-btns { display: flex; flex-direction: column; }
-  .cara-btn {
-    border-top: 1px solid #f1f5f9; padding: 9px 8px;
-    text-align: center; font-size: 12px; font-weight: 600; color: #0f4c81;
-    line-height: 1.4;
-  }
-  .cara-btn.sub { color: #64748b; font-weight: 500; }
-  .cara-hint {
-    margin-top: 8px; font-size: 11px; color: #64748b; text-align: center;
+  .tmpl-text { padding: 13px 14px 12px; font-size: 13px; line-height: 1.75; white-space: pre-line; }
+  .tmpl-btn {
+    border-top: 1px solid #f1f5f9; padding: 11px 8px;
+    text-align: center; font-size: 13px; font-weight: 600; color: #0f4c81;
   }
 
   .source {
@@ -175,14 +156,9 @@
     margin-top: 12px; background: #fffbeb; border: 1px solid #fde68a;
     border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.75; color: #92400e;
   }
+  .note-box.plain { background: #f8fafc; border-color: #e2e8f0; color: #475569; }
 
   /* 確認事項 */
-  .ask-intro {
-    margin: 10px 0 16px; padding: 14px 16px;
-    background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px;
-    font-size: 13px; line-height: 1.8; color: #92400e;
-  }
-  .ask-intro b { font-weight: 700; }
   .ask-hint { font-size: 12.5px; color: #64748b; line-height: 1.75; margin-bottom: 10px; }
   .ask-input {
     width: 100%; min-height: 70px;
@@ -194,45 +170,40 @@
   .ask-status { font-size: 11px; color: #94a3b8; margin-top: 4px; min-height: 16px; }
   .ask-status.saved { color: #22c55e; }
 
-  .export-bar {
-    display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
-    padding: 12px 20px; background: #fff; border-bottom: 1px solid #e2e8f0;
+  /* 追加候補 */
+  .later {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+    padding: 16px 20px 18px;
   }
-  .export-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 12px; font-weight: 600; color: #b45309;
-    background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px;
-    padding: 6px 14px; cursor: pointer;
+  .later p.desc { font-size: 12.5px; color: #64748b; line-height: 1.75; margin-bottom: 10px; }
+  .later ol { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; counter-reset: l; }
+  .later li {
+    font-size: 13px; color: #334155; padding-left: 26px; position: relative; line-height: 1.7;
   }
-  .export-btn:hover { background: #fef3c7; }
-  .export-btn.danger { color: #ef4444; background: #fef2f2; border-color: #fecaca; }
-  .lead-box {
-    max-width: 720px; margin: 16px auto 0; padding: 16px 20px;
-    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
-    font-size: 13px; line-height: 1.8; color: #475569;
+  .later li::before {
+    counter-increment: l; content: counter(l);
+    position: absolute; left: 0; top: 3px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #f1f5f9; color: #64748b;
+    font-size: 10.5px; font-weight: 700; text-align: center; line-height: 18px;
   }
-  .lead-box .lead-title { font-weight: 700; color: #1a1a2e; margin-bottom: 6px; font-size: 14px; }
+  .later li span { color: #94a3b8; font-size: 12px; }
 </style>
 </head>
 <body>
 
 <div class="page-header">
   <h1>公式LINE よくある質問（Q&amp;A）案</h1>
-  <p>牛込内科・糖尿病クリニック｜メニューから質問を選ぶと、回答が届く形</p>
-  <span class="draft-badge">初稿 2026-09-02</span>
+  <p>牛込内科・糖尿病クリニック｜まずは4問だけ、ボタン1通で完結する形</p>
+  <span class="draft-badge">v2 2026-09-02 ｜ 最小構成</span>
 </div>
 
 <div class="lead-box">
   <div class="lead-title">この資料の見かた</div>
   <div>
-    前半は<b>そのまま配信できるQ&amp;A（10問）</b>です。回答は<b>公式サイトに記載がある内容だけ</b>で作成し、各回答に出典を添えています。<br>
-    後半は<b>サイトに記載がなく、患者さんからよく聞かれる項目（8件）</b>です。入力欄にご回答をご記入いただき、最後に「確認事項の回答をコピー」を押して大石までご共有ください。いただいた内容をQ&amp;Aに追加します。
+    はじめは<b>4問だけ</b>で立ち上げる案です。回答は<b>公式サイトに記載がある内容だけ</b>で作っているため、<b>確認待ちなしでそのまま実装できます</b>。<br>
+    一覧にない質問はトークに直接送っていただく形にしているので、実際に届いた質問を見てから増やしていけます。
   </div>
-</div>
-
-<div class="export-bar">
-  <button class="export-btn" onclick="exportAnswers()">確認事項の回答をコピー</button>
-  <button class="export-btn danger" onclick="clearAllAnswers()">入力をすべてクリア</button>
 </div>
 
 <div class="container">
@@ -240,166 +211,55 @@
   <div class="overview">
     <div class="overview-head">配信の仕組み</div>
     <div class="overview-body">
-      質問を10問すべて縦に並べると画面に収まらないため、<b>カテゴリごとのカードに質問ボタンを3つずつ</b>配置し、1タップで回答が届く形にします。
+      カルーセルや階層分けは使いません。<b>ボタン4つのメッセージ1通</b>で完結します（LINEのボタンテンプレートは4つまで）。
       <div class="flow-steps">
         <div class="flow-step-row">
           <span class="flow-step-no">入口</span>
-          <span class="flow-step-txt"><b>リッチメニュー「よくある質問」</b>をタップ<br><span>「駐車場」「診察時間」などのキーワード応答も裏で登録し、自由入力にも対応</span></span>
+          <span class="flow-step-txt"><b>リッチメニュー「よくある質問」</b>をタップ</span>
         </div>
         <div class="flow-step-row">
           <span class="flow-step-no">選択</span>
-          <span class="flow-step-txt"><b>質問がそのままボタンになったカードを4枚提示</b>（カルーセル）<br><span>カテゴリで分けたカードに、質問を3つずつ配置。1タップで回答まで届きます</span></span>
+          <span class="flow-step-txt"><b>ボタン4つのメッセージを1通配信</b><br><span>質問がそのままボタン。1タップで回答が届きます</span></span>
         </div>
         <div class="flow-step-row">
           <span class="flow-step-no">回答</span>
-          <span class="flow-step-txt"><b>回答テキスト＋ボタン</b><br><span>「診察予約する」「ほかの質問を見る」を添えて、そのまま予約へ</span></span>
+          <span class="flow-step-txt"><b>回答テキスト＋予約ボタン</b><br><span>そのまま予約へつなげます</span></span>
         </div>
         <div class="flow-step-row">
           <span class="flow-step-no">その他</span>
-          <span class="flow-step-txt"><b>一覧にない質問は、トークにそのまま送っていただく</b><br><span>最初のメッセージでご案内。届いたご質問は有人でご返信（返信の担当・時間帯は確認8）</span></span>
+          <span class="flow-step-txt"><b>一覧にない質問は、トークにそのまま送っていただく</b><br><span>初回メッセージでご案内。届いたご質問は有人でご返信（下の確認事項）</span></span>
         </div>
       </div>
 
-      <div class="screen-label"><span class="lv">画面</span>質問を選ぶ画面<span class="memo">カルーセル／横にスワイプして4枚</span></div>
+      <div class="screen-label"><span class="lv">画面</span>「よくある質問」をタップした直後<span class="memo">ボタンテンプレート1通</span></div>
       <div class="screen">
-        <div class="msg-bubble" style="max-width:100%;">お知りになりたいことをお選びください。
+        <div class="tmpl-card">
+          <div class="tmpl-text">お知りになりたいことをお選びください。
 
 一覧にない内容は、そのままこのトークにご質問をお送りください。</div>
-        <div class="carousel">
-          <div class="cara-card">
-            <div class="cara-top"><span class="cara-no">CATEGORY 01</span>受診・ご予約</div>
-            <div class="cara-desc">ご予約の方法と、受診までの流れ</div>
-            <div class="cara-btns">
-              <div class="cara-btn">予約はどこからできる？</div>
-              <div class="cara-btn">受診の流れを知りたい</div>
-              <div class="cara-btn">自費診療も予約が必要？</div>
-            </div>
-          </div>
-          <div class="cara-card">
-            <div class="cara-top"><span class="cara-no">CATEGORY 02</span>診察時間・アクセス</div>
-            <div class="cara-desc">診察時間、場所、駐車場について</div>
-            <div class="cara-btns">
-              <div class="cara-btn">診察時間・休診日は？</div>
-              <div class="cara-btn">場所・行き方を知りたい</div>
-              <div class="cara-btn">駐車場はある？</div>
-            </div>
-          </div>
-          <div class="cara-card">
-            <div class="cara-top"><span class="cara-no">CATEGORY 03</span>診療内容</div>
-            <div class="cara-desc">診ている症状と、自費診療のメニュー</div>
-            <div class="cara-btns">
-              <div class="cara-btn">どんな症状で受診できる？</div>
-              <div class="cara-btn">健診で異常を指摘された</div>
-              <div class="cara-btn">自費診療のメニューは？</div>
-            </div>
-          </div>
-          <div class="cara-card">
-            <div class="cara-top"><span class="cara-no">CATEGORY 04</span>オンライン診療</div>
-            <div class="cara-desc">通院が難しい方へのご案内</div>
-            <div class="cara-btns">
-              <div class="cara-btn">オンライン診療は受けられる？</div>
-              <div class="cara-btn sub">診察を予約する</div>
-              <div class="cara-btn sub">そのほかを相談する</div>
-            </div>
-          </div>
+          <div class="tmpl-btn">診察時間・休診日</div>
+          <div class="tmpl-btn">場所・駐車場</div>
+          <div class="tmpl-btn">予約の方法</div>
+          <div class="tmpl-btn">診てもらえる症状・メニュー</div>
         </div>
-        <div class="cara-hint">← 横にスワイプ →</div>
-      </div>
-      <div class="cara-hint" style="text-align:left;margin-top:8px;">
-        ボタンをタップすると、下のQ1〜Q10の回答がそのまま届きます。回答の末尾には「診察予約する」「ほかの質問を見る」を添えます。
       </div>
 
-      <div class="note-box" style="background:#f8fafc;border-color:#e2e8f0;color:#475569;">
-        <b>カード構成の理由</b>：LINEのカルーセルは、すべてのカードでボタンの数を揃える必要があるため、3つずつに分けています。オンライン診療は現状1問のため、残り2つを予約・相談の導線に充てました（確認事項6の回答後に質問を追加します）。
+      <div class="note-box plain">
+        <b>実装するもの</b>：リッチメニューのボタン1つ ＋ 上のメッセージ1通 ＋ 回答4通。以上です。
       </div>
-
       <div class="note-box">
         個別の症状相談（「この症状は受診すべきか」など）はQ&amp;Aでは回答せず、「診察でご相談ください」と受診案内に寄せる方針です。
       </div>
     </div>
   </div>
 
-  <!-- ① 受診・ご予約 -->
-  <div class="section-title"><span class="cat-no">01</span>受診・ご予約<span class="cat-count">3問</span></div>
+  <div class="section-title"><span class="cat-no">回答</span>4問の文面<span class="cat-count">すべてHP記載の内容</span></div>
 
   <div class="step">
     <div class="card card-border-blue">
       <div class="card-header">
         <span class="card-day">Q1</span>
-        <span class="card-title">予約はどこからできますか？</span>
-      </div>
-      <div class="card-body">
-        <div class="msg-preview">
-          <div class="msg-bubble">メニュー右上の「保険診療」から、ご予約ページへ進めます。
-自費診療のご予約は「自費診療」からお進みください。
-
-ご予約後のご案内、診察開始のご連絡、お支払い・領収書のご案内は、すべてこのLINEでお送りします。</div>
-          <div class="msg-bubble">
-            <div class="msg-btns">
-              <div class="msg-btn">保険診療を予約する</div>
-              <div class="msg-btn sec">自費診療を予約する</div>
-            </div>
-          </div>
-        </div>
-        <div class="source">出典：公式サイト「受診の流れ」（LINE登録 → リッチメニュー右上「保険診療」→ 予約ページ）</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="card card-border-blue">
-      <div class="card-header">
-        <span class="card-day">Q2</span>
-        <span class="card-title">受診の流れを教えてください</span>
-      </div>
-      <div class="card-body">
-        <div class="msg-preview">
-          <div class="msg-bubble">01　当院の公式LINEを友だち追加
-02　メニューから予約ページへ進む
-03　ご希望の診療メニューと日時を選択
-04　お名前・ご連絡先・資格確認証を登録
-
-ご予約のお時間になりましたら、診察を開始いたします。</div>
-          <div class="msg-bubble">
-            <div class="msg-btns">
-              <div class="msg-btn">診察予約する</div>
-            </div>
-          </div>
-        </div>
-        <div class="source">出典：公式サイト「受診の流れ」01〜04</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="card card-border-blue">
-      <div class="card-header">
-        <span class="card-day">Q3</span>
-        <span class="card-title">自費診療も予約が必要ですか？</span>
-      </div>
-      <div class="card-body">
-        <div class="msg-preview">
-          <div class="msg-bubble">自費診療は完全予約制です。
-ご希望のメニューを選んで、ご予約をお取りください。</div>
-          <div class="msg-bubble">
-            <div class="msg-btns">
-              <div class="msg-btn">自費診療を予約する</div>
-            </div>
-          </div>
-        </div>
-        <div class="source">出典：公式サイト 診察時間欄の注記「自費診療は完全予約制です。」</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ② 診察時間・アクセス -->
-  <div class="section-title"><span class="cat-no">02</span>診察時間・アクセス<span class="cat-count">3問</span></div>
-
-  <div class="step">
-    <div class="card card-border-blue">
-      <div class="card-header">
-        <span class="card-day">Q4</span>
-        <span class="card-title">診察時間・休診日を教えてください</span>
+        <span class="card-title">診察時間・休診日</span>
       </div>
       <div class="card-body">
         <div class="msg-preview">
@@ -416,7 +276,7 @@
             </div>
           </div>
         </div>
-        <div class="source">出典：公式サイト「診察時間」（月〜金 ⚫︎ ／ 土 −、受付締切 12:30・18:00）</div>
+        <div class="source">出典：公式サイト「診察時間」（月〜金 ⚫︎／土 −、受付締切 12:30・18:00）</div>
       </div>
     </div>
   </div>
@@ -424,8 +284,8 @@
   <div class="step">
     <div class="card card-border-blue">
       <div class="card-header">
-        <span class="card-day">Q5</span>
-        <span class="card-title">場所・行き方を教えてください</span>
+        <span class="card-day">Q2</span>
+        <span class="card-title">場所・駐車場</span>
       </div>
       <div class="card-body">
         <div class="msg-preview">
@@ -433,14 +293,17 @@
 
 〒162-0063
 東京都新宿区市谷薬王寺町14-17
-アルス市ヶ谷薬王寺101</div>
+アルス市ヶ谷薬王寺101
+
+当院に駐車場はございません。お近くのコインパーキングをご利用ください。
+なお、開院前にお並びいただくことはお控えください。</div>
           <div class="msg-bubble">
             <div class="msg-btns">
               <div class="msg-btn sec">地図を見る</div>
             </div>
           </div>
         </div>
-        <div class="source">出典：公式サイト「アクセス」／サイトタイトル「牛込柳町駅 徒歩2分」</div>
+        <div class="source">出典：公式サイト「アクセス」＋注記2点／サイトタイトル「牛込柳町駅 徒歩2分」</div>
       </div>
     </div>
   </div>
@@ -448,45 +311,25 @@
   <div class="step">
     <div class="card card-border-blue">
       <div class="card-header">
-        <span class="card-day">Q6</span>
-        <span class="card-title">駐車場はありますか？</span>
+        <span class="card-day">Q3</span>
+        <span class="card-title">予約の方法</span>
       </div>
       <div class="card-body">
         <div class="msg-preview">
-          <div class="msg-bubble">当院に駐車場はございません。
-お近くのコインパーキングをご利用ください。
+          <div class="msg-bubble">メニュー右上の「保険診療」から、ご予約ページへ進めます。
+自費診療のご予約は「自費診療」からお進みください。（自費診療は完全予約制です）
 
-なお、開院前にお並びいただくことはお控えください。</div>
-        </div>
-        <div class="source">出典：公式サイト「アクセス」注記2点をそのまま反映</div>
-      </div>
-    </div>
-  </div>
+ご希望の診療メニューと日時を選び、お名前・ご連絡先・資格確認証をご登録ください。
 
-  <!-- ③ 診療内容 -->
-  <div class="section-title"><span class="cat-no">03</span>診療内容<span class="cat-count">3問</span></div>
-
-  <div class="step">
-    <div class="card card-border-blue">
-      <div class="card-header">
-        <span class="card-day">Q7</span>
-        <span class="card-title">どんな症状で受診できますか？</span>
-      </div>
-      <div class="card-body">
-        <div class="msg-preview">
-          <div class="msg-bubble">風邪、発熱、咳、のどの痛み、胃痛・胃もたれ、下痢、便秘、頭痛など、一般内科全般に対応しております。
-
-また、糖尿病・高血圧・脂質異常症などの生活習慣病、甲状腺・副腎・下垂体などホルモンの病気も、専門的に診療しております。
-
-症状がひどくなる前に、お早めにご相談ください。</div>
+ご予約後のご案内、診察開始のご連絡、お支払い・領収書のご案内は、すべてこのLINEでお送りします。</div>
           <div class="msg-bubble">
             <div class="msg-btns">
-              <div class="msg-btn">診察予約する</div>
-              <div class="msg-btn sec">保険診療のページを見る</div>
+              <div class="msg-btn">保険診療を予約する</div>
+              <div class="msg-btn sec">自費診療を予約する</div>
             </div>
           </div>
         </div>
-        <div class="source">出典：公式サイト「保険診療」一般内科・生活習慣病・甲状腺疾患・副腎疾患・下垂体疾患の各説明文</div>
+        <div class="source">出典：公式サイト「受診の流れ」01〜04／診察時間欄の注記「自費診療は完全予約制です。」</div>
       </div>
     </div>
   </div>
@@ -494,203 +337,56 @@
   <div class="step">
     <div class="card card-border-blue">
       <div class="card-header">
-        <span class="card-day">Q8</span>
-        <span class="card-title">健康診断で異常を指摘されました</span>
+        <span class="card-day">Q4</span>
+        <span class="card-title">診てもらえる症状・メニュー</span>
       </div>
       <div class="card-body">
         <div class="msg-preview">
-          <div class="msg-bubble">血圧、血糖値、脂質、尿酸値、肝機能の異常など、健康診断で指摘された項目の精査・管理を行っております。
+          <div class="msg-bubble">風邪、発熱、咳、のどの痛み、胃の不調、頭痛など、一般内科全般に対応しております。
 
-放置せず早めに対応することで、将来的な病気の予防につながります。健診の結果をお持ちのうえ、ご来院ください。</div>
+糖尿病・高血圧・脂質異常症などの生活習慣病、甲状腺・副腎・下垂体などホルモンの病気も専門的に診療しております。健康診断で指摘された数値の再検査もお任せください。
+
+このほか、ダイエット・代謝治療、男性外来、女性外来、美容点滴などの自費診療もご用意しております（自由診療は保険適用外・全額自己負担）。</div>
           <div class="msg-bubble">
             <div class="msg-btns">
               <div class="msg-btn">診察予約する</div>
-            </div>
-          </div>
-        </div>
-        <div class="source">出典：公式サイト「保険診療 ＞ 健康診断異常フォロー」</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="card card-border-blue">
-      <div class="card-header">
-        <span class="card-day">Q9</span>
-        <span class="card-title">自費診療にはどんなメニューがありますか？</span>
-      </div>
-      <div class="card-body">
-        <div class="msg-preview">
-          <div class="msg-bubble">主に次のメニューをご用意しております。
-
-・ダイエット、代謝治療
-・男性外来（ED・AGA・LOH症候群）
-・女性外来（FAGA・ピル・更年期）
-・美容、ビタミン点滴、プラセンタ
-・予防医療、検査（持続血糖測定、遺伝子検査など）
-
-自由診療は保険適用外となり、費用は全額自己負担となります。</div>
-          <div class="msg-bubble">
-            <div class="msg-btns">
               <div class="msg-btn sec">自費診療のページを見る</div>
-              <div class="msg-btn">自費診療を予約する</div>
             </div>
           </div>
         </div>
-        <div class="source">出典：公式サイト「自費診療」5メニューの見出しと注記</div>
-        <div class="note-box">
-          料金はサイトの価格表（ビタミン注射・美容施術）に掲載があります。LINEに金額を直接載せるかは、下の確認事項7でご相談させてください。
-        </div>
+        <div class="source">出典：公式サイト「保険診療」各科目の説明文／「自費診療」5メニューの見出しと注記</div>
       </div>
     </div>
   </div>
 
-  <div class="section-title"><span class="cat-no">04</span>オンライン診療<span class="cat-count">1問</span></div>
-
-  <div class="step">
-    <div class="card card-border-blue">
-      <div class="card-header">
-        <span class="card-day">Q10</span>
-        <span class="card-title">オンライン診療は受けられますか？</span>
-      </div>
-      <div class="card-body">
-        <div class="msg-preview">
-          <div class="msg-bubble">提携するオンライン診療サービス「Biyokuru」でご受診いただけます。
-
-お仕事や子育てで通院の時間が取れない方、出張や旅行で近隣から離れている方も、ご都合に合わせてご利用ください。</div>
-          <div class="msg-bubble">
-            <div class="msg-btns">
-              <div class="msg-btn">オンライン診療について</div>
-            </div>
-          </div>
-        </div>
-        <div class="source">出典：公式サイト「自費診療 ＞ オンライン診療」</div>
-        <div class="note-box">
-          受付時間・対応曜日、初診から受けられるか、お薬の受け取り方法はサイトに記載がないため、確認事項6でお伺いします。回答をいただき次第、オンライン診療の質問を2〜3問追加します。
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 確認事項 -->
-  <div class="section-title"><span class="cat-no" style="background:#f59e0b;">確認</span>先方確認事項<span class="cat-count">8件</span></div>
-
-  <div class="ask-intro">
-    <b>ご記入をお願いします。</b>患者さんからよく聞かれる一方、公式サイトに記載がないため回答を作れない項目です。
-    各欄にご回答をご記入いただき、ページ上部の「確認事項の回答をコピー」からテキストをご共有ください。<br>
-    入力内容はご利用の端末に自動保存されますので、途中で閉じても消えません。
-  </div>
+  <div class="section-title"><span class="cat-no" style="background:#f59e0b;">確認</span>先方確認事項<span class="cat-count">1件</span></div>
 
   <div class="step">
     <div class="card card-border-orange">
       <div class="card-header">
-        <span class="card-day warn">確認1</span>
-        <span class="card-title">予約なしで来院された方は、受診できますか？</span>
-      </div>
-      <div class="card-body">
-        <div class="ask-hint">「当日でも診てもらえますか？」は最も多い質問です。当日枠の有無、予約なしで来られた場合の対応をお教えください。発熱の方の来院時間・動線に決まりがあれば、あわせてご記入ください。</div>
-        <textarea class="ask-input" data-key="ushigome-faq-q1" data-label="確認1 予約なしの当日受診" placeholder="例：当日枠あり。予約なしでも受付可能だが待ち時間が長くなる場合あり..." oninput="saveAnswer(this)"></textarea>
-        <div class="ask-status"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="card card-border-orange">
-      <div class="card-header">
-        <span class="card-day warn">確認2</span>
-        <span class="card-title">初診のとき、何をお持ちいただく必要がありますか？</span>
-      </div>
-      <div class="card-body">
-        <div class="ask-hint">健康保険証（マイナ保険証）のほかに、お薬手帳・健診結果・紹介状・医療証など、ご案内したいものをお教えください。マイナ保険証の読み取り機の有無もあわせてお願いします。</div>
-        <textarea class="ask-input" data-key="ushigome-faq-q2" data-label="確認2 初診の持ち物" placeholder="例：保険証（マイナ保険証可）、お薬手帳、健診結果..." oninput="saveAnswer(this)"></textarea>
-        <div class="ask-status"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="card card-border-orange">
-      <div class="card-header">
-        <span class="card-day warn">確認3</span>
-        <span class="card-title">予約の変更・キャンセルは、どのように受け付けていますか？</span>
-      </div>
-      <div class="card-body">
-        <div class="ask-hint">予約サイトのマイページから可能か、当日はお電話かなど。受付の期限、自費診療のキャンセル料の有無もお教えください。</div>
-        <textarea class="ask-input" data-key="ushigome-faq-q3" data-label="確認3 予約の変更・キャンセル" placeholder="例：前日までは予約ページから、当日は電話..." oninput="saveAnswer(this)"></textarea>
-        <div class="ask-status"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="card card-border-orange">
-      <div class="card-header">
-        <span class="card-day warn">確認4</span>
-        <span class="card-title">お支払い方法は何がご利用いただけますか？</span>
-      </div>
-      <div class="card-body">
-        <div class="ask-hint">予約サイトには「現金またはクレジットカード」の記載がありますが、公式サイトには記載がありません。対応カードブランド、QRコード決済・電子マネーの可否をお教えください。</div>
-        <textarea class="ask-input" data-key="ushigome-faq-q4" data-label="確認4 支払い方法" placeholder="例：現金・クレジットカード（VISA/Master/JCB）、PayPay可..." oninput="saveAnswer(this)"></textarea>
-        <div class="ask-status"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="card card-border-orange">
-      <div class="card-header">
-        <span class="card-day warn">確認5</span>
-        <span class="card-title">お薬だけを受け取りたい、というご要望への対応は？</span>
-      </div>
-      <div class="card-body">
-        <div class="ask-hint">診察が必要な旨をご案内する形でよいか、継続処方をオンライン診療で受けられるか（何回に1回は対面が必要か）をお教えください。</div>
-        <textarea class="ask-input" data-key="ushigome-faq-q5" data-label="確認5 お薬のみの処方" placeholder="例：診察が必要。継続の方はオンライン診療も可..." oninput="saveAnswer(this)"></textarea>
-        <div class="ask-status"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="card card-border-orange">
-      <div class="card-header">
-        <span class="card-day warn">確認6</span>
-        <span class="card-title">オンライン診療の受付時間・初診の可否・お薬の受け取り方法</span>
-      </div>
-      <div class="card-body">
-        <div class="ask-hint">3点まとめてお伺いします。①受付時間と対応曜日（予約サイトには「毎日10時〜21時」の記載あり）②初診からオンラインで受けられるか ③お薬は配送か、薬局での受け取りか。送料・お届け日数もあればお願いします。</div>
-        <textarea class="ask-input" data-key="ushigome-faq-q6" data-label="確認6 オンライン診療の運用" placeholder="①受付時間：&#10;②初診の可否：&#10;③お薬の受け取り：" oninput="saveAnswer(this)"></textarea>
-        <div class="ask-status"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="card card-border-orange">
-      <div class="card-header">
-        <span class="card-day warn">確認7</span>
-        <span class="card-title">自費診療の料金は、LINEでどこまでご案内しますか？</span>
-      </div>
-      <div class="card-body">
-        <div class="ask-hint">「サイトの価格表へ誘導するだけ」か、「主要メニューの金額をLINEにも載せる」か。載せる場合は、対象メニューと金額をお教えください。</div>
-        <textarea class="ask-input" data-key="ushigome-faq-q7" data-label="確認7 自費料金の案内範囲" placeholder="例：サイトの価格表へ誘導のみ／GLP-1と点滴だけ金額を載せる..." oninput="saveAnswer(this)"></textarea>
-        <div class="ask-status"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="card card-border-orange">
-      <div class="card-header">
-        <span class="card-day warn">確認8</span>
+        <span class="card-day warn">確認</span>
         <span class="card-title">トークに直接届いたご質問には、どなたがご返信されますか？</span>
       </div>
       <div class="card-body">
-        <div class="ask-hint">一覧にない質問は、そのままトークに送っていただく案内を入れています。ご返信の担当者と、お返事できる時間帯をお教えください（例：診療時間内に順次）。診療時間外に届いた場合の自動応答文もご用意します。</div>
-        <textarea class="ask-input" data-key="ushigome-faq-q8" data-label="確認8 トークへの質問の返信運用" placeholder="例：受付スタッフが診療時間内に順次返信..." oninput="saveAnswer(this)"></textarea>
+        <div class="ask-hint">一覧にない質問は、そのままトークに送っていただく案内を入れています。ご返信の担当者と、お返事できる時間帯をお教えください（例：診療時間内に順次）。診療時間外に届いた場合の自動応答文もご用意します。<br>この1点さえ決まれば、Q&amp;Aは公開できます。</div>
+        <textarea class="ask-input" data-key="ushigome-faq-reply" placeholder="例：受付スタッフが診療時間内に順次返信..." oninput="saveAnswer(this)"></textarea>
         <div class="ask-status"></div>
       </div>
     </div>
+  </div>
+
+  <div class="section-title"><span class="cat-no" style="background:#94a3b8;">次</span>増やすとしたら、この順で</div>
+
+  <div class="later">
+    <p class="desc">実際にトークへ届いた質問を見ながら、必要なものだけ足していく想定です。いずれもサイトに記載がないため、追加のタイミングでクリニックへ確認します。</p>
+    <ol>
+      <li>予約なしで来院された場合の対応 <span>／「当日でも診てもらえますか？」は最も多い質問</span></li>
+      <li>初診の持ち物 <span>／保険証以外にご案内したいもの</span></li>
+      <li>オンライン診療の受付時間・初診の可否・お薬の受け取り方法</li>
+      <li>お支払い方法 <span>／カードブランド、QR決済の可否</span></li>
+      <li>予約の変更・キャンセルの受付方法</li>
+      <li>自費診療の料金 <span>／LINEに金額を載せるか、サイトの価格表へ誘導するか</span></li>
+    </ol>
   </div>
 
 </div>
@@ -714,25 +410,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (saved) ta.value = saved;
   });
 });
-function exportAnswers() {
-  const lines = [];
-  document.querySelectorAll('.ask-input').forEach(ta => {
-    const val = ta.value.trim();
-    if (val) lines.push('【' + ta.dataset.label + '】\n' + val);
-  });
-  if (!lines.length) { alert('まだ回答が入力されていません'); return; }
-  const text = '=== 牛込内科 LINE Q&A 確認事項への回答 ===\n\n' + lines.join('\n\n---\n\n');
-  navigator.clipboard.writeText(text).then(() => {
-    alert('回答をコピーしました（' + lines.length + '件）');
-  });
-}
-function clearAllAnswers() {
-  if (!confirm('入力した回答をすべて削除しますか？')) return;
-  document.querySelectorAll('.ask-input').forEach(ta => {
-    ta.value = '';
-    localStorage.removeItem(ta.dataset.key);
-  });
-}
 </script>
 
 </body>
